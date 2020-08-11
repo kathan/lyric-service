@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
     aws-cli: circleci/aws-cli@1.2.1
-    serverless: circleci/serverless-framework@1.0
+    serverless-framework: circleci/serverless-framework@1.0.1
 jobs:
     one:
         executor: serverless/default
@@ -9,7 +9,11 @@ jobs:
             - checkout
             - aws-cli/setup
             - serverless/setup
-            - run: sls deploy 
+                app-name: serverless-framework-orb
+                org-name: circleci
+            - run: 
+                command: sls deploy 
+                name: deploy
 workflows:
     one_and_two:
         jobs:
