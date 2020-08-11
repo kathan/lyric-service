@@ -20,7 +20,7 @@ jobs:
                 name: Deploy functions
                 command: |
                     cd functions
-                    ../.circleci/deploy.sh build dev
+                    ../.circleci/deploy.sh lyric-service
 workflows:
     full:
         jobs:
