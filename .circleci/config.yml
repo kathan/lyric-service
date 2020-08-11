@@ -2,7 +2,7 @@ version: 2.1
 jobs:        
     build_dev:
         machine:
-            image: ubuntu-1604:202007-01
+            image: "circleci/node:9.6.1"
         steps:
             - checkout
             - run:
