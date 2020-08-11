@@ -13,6 +13,7 @@ if [ -f package-lock.json ]; then
 else
     npm i
 fi
+aws configure set default.region "$AWS_REGION"
 
 zip -r "${current_build}.zip" .
 echo "Checking if function $current_build already exists"
