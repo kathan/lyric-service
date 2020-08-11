@@ -18,7 +18,7 @@ jobs:
                 name: Deploy functions
                 command: |
                     cd functions
-                    ../.circleci/deploy.sh echo
+                    ../.circleci/deploy.sh build dev
 workflows:
     full:
         jobs:
