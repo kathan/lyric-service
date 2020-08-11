@@ -1,108 +1,108 @@
 version: 2
 jobs:
-build_dev:
-    working_directory: ~/project
-    docker:
-    - image: buildpack-deps:xenial
-    environment:
-    DEPLOY_ENVIRONMENT: dev
-    steps:
-    - checkout
-    - run:
-        name: Setup Environment Variables
-        command: |
-            echo 'export AWS_REST_API_ID="$AWS_DEV_REST_API_ID"' >> $BASH_ENV
-            echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
-    # Better to create a docker image for this step
-    - run:
-        name: Install awscli, jq and npm
-        command: |
-            apt-get update
-            apt-get install -y jq zip python3-pip
-            pip3 install awscli --upgrade
-            curl -sL https://deb.nodesource.com/setup_8.x | bash -
-            apt-get install -y nodejs
-            npm install -g npm@5
-            aws configure set default.region $AWS_REGION
-    - run:
-        name: Deploy Functions
-        command: |
-            cd functions
-            ../.circleci/deploy.sh echo
-            ../.circleci/deploy.sh hello-world
-build_stg:
-    working_directory: ~/project
-    docker:
-    - image: buildpack-deps:xenial
-    environment:
-    DEPLOY_ENVIRONMENT: stg
-    steps:
-    - checkout
-    - run:
-        name: Setup Environment Variables
-        command: |
-            echo 'export AWS_REST_API_ID="$AWS_STG_REST_API_ID"' >> $BASH_ENV
-            echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
-    # Better to create a docker image for this step
-    - run:
-        name: Install awscli, jq and npm
-        command: |
-            apt-get update
-            apt-get install -y jq zip python3-pip
-            pip3 install awscli --upgrade
-            curl -sL https://deb.nodesource.com/setup_8.x | bash -
-            apt-get install -y nodejs
-            npm install -g npm@5
-            aws configure set default.region $AWS_REGION
-    - run:
-        name: Deploy Functions
-        command: |
-            cd functions
-            ../.circleci/deploy.sh echo
-            ../.circleci/deploy.sh hello-world
-build_prod:
-    working_directory: ~/project
-    docker:
-    - image: buildpack-deps:xenial
-    environment:
-    DEPLOY_ENVIRONMENT: prod
-    steps:
-    - checkout
-    - run:
-        name: Setup Environment Variables
-        command: |
-            echo 'export AWS_REST_API_ID="$AWS_PROD_REST_API_ID"' >> $BASH_ENV
-            echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
-    # Better to create a docker image for this step
-    - run:
-        name: Install awscli, jq and npm
-        command: |
-            apt-get update
-            apt-get install -y jq zip python3-pip
-            pip3 install awscli --upgrade
-            curl -sL https://deb.nodesource.com/setup_8.x | bash -
-            apt-get install -y nodejs
-            npm install -g npm@5
-            aws configure set default.region $AWS_REGION
-    - run:
-        name: Deploy Functions
-        command: |
-            cd functions
-            ../.circleci/deploy.sh echo
-            ../.circleci/deploy.sh hello-world
+    build_dev:
+        working_directory: ~/project
+        docker:
+        - image: buildpack-deps:xenial
+        environment:
+        DEPLOY_ENVIRONMENT: dev
+        steps:
+        - checkout
+        - run:
+            name: Setup Environment Variables
+            command: |
+                echo 'export AWS_REST_API_ID="$AWS_DEV_REST_API_ID"' >> $BASH_ENV
+                echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
+        # Better to create a docker image for this step
+        - run:
+            name: Install awscli, jq and npm
+            command: |
+                apt-get update
+                apt-get install -y jq zip python3-pip
+                pip3 install awscli --upgrade
+                curl -sL https://deb.nodesource.com/setup_8.x | bash -
+                apt-get install -y nodejs
+                npm install -g npm@5
+                aws configure set default.region $AWS_REGION
+        - run:
+            name: Deploy Functions
+            command: |
+                cd functions
+                ../.circleci/deploy.sh echo
+                ../.circleci/deploy.sh hello-world
+    build_stg:
+        working_directory: ~/project
+        docker:
+        - image: buildpack-deps:xenial
+        environment:
+        DEPLOY_ENVIRONMENT: stg
+        steps:
+        - checkout
+        - run:
+            name: Setup Environment Variables
+            command: |
+                echo 'export AWS_REST_API_ID="$AWS_STG_REST_API_ID"' >> $BASH_ENV
+                echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
+        # Better to create a docker image for this step
+        - run:
+            name: Install awscli, jq and npm
+            command: |
+                apt-get update
+                apt-get install -y jq zip python3-pip
+                pip3 install awscli --upgrade
+                curl -sL https://deb.nodesource.com/setup_8.x | bash -
+                apt-get install -y nodejs
+                npm install -g npm@5
+                aws configure set default.region $AWS_REGION
+        - run:
+            name: Deploy Functions
+            command: |
+                cd functions
+                ../.circleci/deploy.sh echo
+                ../.circleci/deploy.sh hello-world
+    build_prod:
+        working_directory: ~/project
+        docker:
+        - image: buildpack-deps:xenial
+        environment:
+        DEPLOY_ENVIRONMENT: prod
+        steps:
+        - checkout
+        - run:
+            name: Setup Environment Variables
+            command: |
+                echo 'export AWS_REST_API_ID="$AWS_PROD_REST_API_ID"' >> $BASH_ENV
+                echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
+        # Better to create a docker image for this step
+        - run:
+            name: Install awscli, jq and npm
+            command: |
+                apt-get update
+                apt-get install -y jq zip python3-pip
+                pip3 install awscli --upgrade
+                curl -sL https://deb.nodesource.com/setup_8.x | bash -
+                apt-get install -y nodejs
+                npm install -g npm@5
+                aws configure set default.region $AWS_REGION
+        - run:
+            name: Deploy Functions
+            command: |
+                cd functions
+                ../.circleci/deploy.sh echo
+                ../.circleci/deploy.sh hello-world
 workflows:
 version: 2
-full:
-    jobs:
-    - build_dev:
-        filters:
-            branches:
-            only: master
-    - build_stg:
-        filters:
-            branches:
-            only: stg
-    - build_prod:
-        filters:
-            branches:
-            only: prod
+    full:
+        jobs:
+        - build_dev:
+            filters:
+                branches:
+                only: master
+        - build_stg:
+            filters:
+                branches:
+                only: stg
+        - build_prod:
+            filters:
+                branches:
+                only: prod
