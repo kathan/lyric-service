@@ -2,7 +2,7 @@ version: 2.1
 jobs:        
     build_dev:
         machine:
-            image: "circleci/node:9.6.1"
+            image: "circleci/node:lastest"
         steps:
             - checkout
             - run:
