@@ -22,7 +22,7 @@ jobs:
                     pip3 install awscli --upgrade
                     curl -sL https://deb.nodesource.com/setup_12.x | bash -
                     apt-get install -y nodejs
-                    npm install -g npm@12
+                    npm install -g npm@latest
                     aws configure set default.region $AWS_REGION
             - run:
                 name: Deploy Functions
