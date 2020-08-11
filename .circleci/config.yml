@@ -1,7 +1,7 @@
 version: 2.1
 jobs:        
     build_dev:
-        machine:
+        docker:
             image: "circleci/node:latest"
         steps:
             - checkout
