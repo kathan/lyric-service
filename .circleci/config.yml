@@ -91,18 +91,17 @@ jobs:
                 ../.circleci/deploy.sh echo
                 ../.circleci/deploy.sh hello-world
 workflows:
-    version: 2
     full:
         jobs:
         - build_dev:
             filters:
                 branches:
-                only: master
+                    only: master
         - build_stg:
             filters:
                 branches:
-                only: stg
+                    only: stg
         - build_prod:
             filters:
                 branches:
-                only: prod
+                    only: prod
