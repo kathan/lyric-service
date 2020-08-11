@@ -91,7 +91,7 @@ jobs:
                 ../.circleci/deploy.sh echo
                 ../.circleci/deploy.sh hello-world
 workflows:
-version: 2
+    version: 2
     full:
         jobs:
         - build_dev:
