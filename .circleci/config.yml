@@ -33,7 +33,7 @@ jobs:
 workflows:
     full:
         jobs:
-        - build_dev:
-            filters:
-                branches:
-                    only: master
+            - build_dev:
+                filters:
+                    branches:
+                        only: master
