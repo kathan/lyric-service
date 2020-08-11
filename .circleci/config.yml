@@ -1,6 +1,8 @@
 version: 2.1
 jobs:        
     build_dev:
+        environment:
+            DEPLOY_ENVIRONMENT: dev
         docker:
             - image: "circleci/node:latest"
         steps:
