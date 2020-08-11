@@ -8,7 +8,7 @@ jobs:
         steps:
             - checkout
             - aws-cli/setup
-            - serverless/setup
+            - serverless/setup:
                 app-name: serverless-framework-orb
                 org-name: circleci
             - run: 
