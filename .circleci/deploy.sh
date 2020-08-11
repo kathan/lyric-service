@@ -17,11 +17,11 @@ zip -r "${current_build}.zip" .
 echo "Checking if function $current_build already exists"
 functionsJson=$(aws lambda list-functions)
 echo "$functionsJson"
-functionArn=$(echo $functionsJson | jq -r --arg CURRENTFUNCTION "$current_build" '.Functions[] | select(.FunctionName==$CURRENTFUNCTION) | .FunctionArn')
+functionArn=$(echo $functionsJson | jq -r --arg CURRENTFUNCTION "$current_build" '.Functions[] | select(.FunctionName=="$current_function") | .FunctionArn')
 if [ -z "$functionArn" ]
 then
     echo "Creating function: $current_build"
-    functionArn=$(aws lambda create-function --function-name "$current_build" --runtime nodejs8.10 --role arn:aws:iam::$AWS_ACCOUNT_ID:role/lambda-basic-role --handler lambdaCtx.handler --zip-file fileb://./"${current_build}.zip" | jq -r '.FunctionArn')
+    functionArn=$(aws lambda create-function --function-name "$current_build" --runtime nodejs12.x --role arn:aws:iam::$AWS_ACCOUNT_ID:role/lambda-basic-role --handler lambdaCtx.handler --zip-file fileb://./"${current_build}.zip" | jq -r '.FunctionArn')
     if [ -z "$functionArn" ]
     then
         echo "Failed to get functionArn"
