@@ -1,28 +1,30 @@
-version: 2
-jobs:
-build_dev:
-    steps:
-    - checkout
-    - run:
-        name: Setup Environment Variables
-        command: |
-            echo 'export AWS_REST_API_ID="$AWS_DEV_REST_API_ID"' >> $BASH_ENV
-    - run:
-        name: Install dependencies
-        command: |
-            apt-get update
-            apt-get install -y jq zip python3-pip
-            ...
-    - run:
-        name: Deploy functions
-        command: |
-            cd functions
-            ../.circleci/deploy.sh echo
+--
+version: 2.1
+
+jobs:        
+    build_dev:
+        machine:
+            image: ubuntu-1604:202007-01
+        steps:
+            - checkout
+            - run:
+                name: Setup Environment Variables
+                command: |
+                    echo 'export AWS_REST_API_ID="$AWS_DEV_REST_API_ID"' >> $BASH_ENV
+            - run:
+                name: Install dependencies
+                command: |
+                    apt-get update
+                    apt-get install -y jq zip python3-pip
+            - run:
+                name: Deploy functions
+                command: |
+                    cd functions
+                    ../.circleci/deploy.sh echo
 workflows:
-version: 2
-full:
-    jobs:
-    - build_dev:
-        filters:
-            branches:
-            only: master
+    full:
+        jobs:
+            - build_dev:
+                filters:
+                    branches:
+                        only: master
