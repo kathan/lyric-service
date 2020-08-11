@@ -15,7 +15,7 @@ else
 fi
 zip -r "${current_build}.zip" .
 echo "Checking if function $current_build already exists"
-functionArn=$(aws lambda list-functions | jq -r --arg CURRENTFUNCTION "$current_build" '.Functions[] | select(.FunctionName==$CURRENTFUNCTION) | .FunctionArn')
+functionArn=$(aws lambda list-functions | jq -r --arg CURRENTFUNCTION "$current_build" '.Functions[] | select(.FunctionName==$current_function) | .FunctionArn')
 if [ -z "$functionArn" ]
 then
     echo "Creating function: $current_build"
