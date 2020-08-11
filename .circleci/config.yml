@@ -23,8 +23,7 @@ jobs:
                     curl -sL https://deb.nodesource.com/setup_12.x | bash -
                     apt-get install -y nodejs
                     npm install -g npm@latest
-                    echo "${AWS_REGION}"
-                    aws configure set default.region ${AWS_REGION}
+                    aws configure set default.region "$AWS_REGION"
             - run:
                 name: Deploy Functions
                 command: |
