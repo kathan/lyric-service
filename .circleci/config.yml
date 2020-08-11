@@ -17,8 +17,8 @@ jobs:
                 command: |
                     sudo apt-get update
                     sudo apt-get install -y jq zip python3-pip pip3 install awscli --upgrade
-                    curl -sL https://deb.nodesource.com/setup_8.x | bash -
-                    apt-get install -y nodejs
+                    curl -sL https://deb.nodesource.com/setup_12.x | bash -
+                    sudo apt-get install -y nodejs
                     npm install -g npm@12
                     aws configure set default.region $AWS_REGION
             - run:
