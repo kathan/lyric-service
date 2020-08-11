@@ -19,8 +19,8 @@ jobs:
                 command: |
                     apt-get update
                     apt-get install -y jq zip python3-pip
-                    pip3 install awscli --upgrade
-                    echo aws --version
+                    pip3 install awscli
+                    aws --version
                     curl -sL https://deb.nodesource.com/setup_12.x | bash -
                     apt-get install -y nodejs
                     npm install -g npm@latest
