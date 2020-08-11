@@ -11,7 +11,7 @@ cd ../functions/${current_function}
 if [ -f package-lock.json ]; then
     npm ci
 else
-npm i
+    npm i
 fi
 zip -r "${current_build}.zip" .
 echo "Checking if function $current_build already exists"

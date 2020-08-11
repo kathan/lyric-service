@@ -4,18 +4,23 @@ jobs:
         environment:
             DEPLOY_ENVIRONMENT: dev
         docker:
-            - image: "circleci/node:latest"
+            - image: "buildpack-deps:xenial"
         steps:
             - checkout
             - run:
                 name: Setup Environment Variables
                 command: |
                     echo 'export AWS_REST_API_ID="$AWS_DEV_REST_API_ID"' >> $BASH_ENV
+                    echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
             - run:
                 name: Install dependencies
                 command: |
                     sudo apt-get update
-                    sudo apt-get install -y jq zip python3-pip
+                    sudo apt-get install -y jq zip python3-pip pip3 install awscli --upgrade
+                    curl -sL https://deb.nodesource.com/setup_8.x | bash -
+                    apt-get install -y nodejs
+                    npm install -g npm@5
+                    aws configure set default.region $AWS_REGION
             - run:
                 name: Deploy functions
                 command: |
