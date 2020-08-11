@@ -6,7 +6,6 @@ jobs:
             - image: buildpack-deps:xenial
         environment:
             DEPLOY_ENVIRONMENT: dev
-            AWS_REGION: ${AWS_REGION}
         steps:
             - checkout
             - run:
@@ -14,6 +13,7 @@ jobs:
                 command: |
                     echo 'export AWS_REST_API_ID="$AWS_DEV_REST_API_ID"' >> $BASH_ENV
                     echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
+                    echo 'export AWS_REGION="$AWS_REGION"' >> $BASH_ENV
             # Better to create a docker image for this step
             - run:
                 name: Install awscli, jq and npm
