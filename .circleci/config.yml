@@ -1,41 +1,16 @@
 version: 2.1
+orbs:
+    aws-cli: circleci/aws-cli@1.0
+    serverless: circleci/serverless-framework@1.0
 jobs:
-    build_dev:
-        working_directory: ~/project
-        docker:
-            - image: buildpack-deps:xenial
-        environment:
-            DEPLOY_ENVIRONMENT: dev
+    one:
+        executor: serverless/default
         steps:
             - checkout
-            - run:
-                name: Setup Environment Variables
-                command: |
-                    echo 'export AWS_REST_API_ID="$AWS_DEV_REST_API_ID"' >> $BASH_ENV
-                    echo 'export GIT_SHA="$(git rev-parse --short HEAD)"' >> $BASH_ENV
-                    echo 'export AWS_REGION="$AWS_REGION"' >> $BASH_ENV
-            # Better to create a docker image for this step
-            - run:
-                name: Install awscli, jq and npm
-                command: |
-                    apt-get update
-                    apt-get install -y jq zip python3-pip
-                    pip3 install awscli
-                    curl -sL https://deb.nodesource.com/setup_12.x | bash -
-                    apt-get install -y nodejs
-                    npm install -g npm@latest
-                    aws configure set default.region "$AWS_REGION"
-                    aws configure set aws_access_key_id "$AWS_ACCESS_KEY"
-                    aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
-            - run:
-                name: Deploy Functions
-                command: |
-                    cd functions
-                    ../.circleci/deploy.sh lyric-service    
+            - aws-cli/setup
+            - serverless/setup
+            - run: sls deploy 
 workflows:
-    full:
+    one_and_two:
         jobs:
-            - build_dev:
-                filters:
-                    branches:
-                        only: master
+            - one
