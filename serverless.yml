@@ -69,11 +69,12 @@ functions:
           method: 
             - any
             - options
-          - http:
-              path: "{proxy}"
-              method: 
-                - any
-                - options
+          events:
+              - http:
+                path: "{proxy}"
+                method: 
+                  - any
+                  - options
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
