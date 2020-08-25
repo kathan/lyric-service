@@ -65,10 +65,15 @@ functions:
 #    Check the event documentation for details
     events:
       - http:
-          path: "api/{proxy}"
+          path: api
           method: 
             - any
             - options
+          resource:
+            path: "{proxy}"
+            method:
+              - any
+              - options
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
