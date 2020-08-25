@@ -65,12 +65,12 @@ functions:
 #    Check the event documentation for details
     events:
       - http:
-        path: api
-        method: 
-          - any
-          - options
-        resource:
-          path: "{proxy}"
+          path: api
+          method: 
+            - any
+            - options
+      - http:
+          path: "api/{proxy}"
           method:
             - any
             - options
