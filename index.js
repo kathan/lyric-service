@@ -1,13 +1,17 @@
 'use strict';
 const dispatch = require('lib/dispatch.js')
+const response = response = {
+  "statusCode": 200,
+  "isBase64Encoded": false
+}
 
-module.exports.handler = async event => {
-  const result = await dispatch(event)
+module.exports.handler = async request => {
+  const result = await dispatch(request, response)
   return {
-    statusCode: result.statusCode || 200,
-    body: JSON.stringify(
+    statusCode: response.statusCode,
+    body: response.body || JSON.stringify(
       {
-        input: event,
+        input: request,
       },
       null,
       2
