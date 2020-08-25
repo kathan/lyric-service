@@ -2,9 +2,9 @@
 const dispatch = require('lib/dispatch.js')
 
 module.exports.handler = async event => {
-  dispatch(event)
+  const result = dispatch(event)
   return {
-    statusCode: 200,
+    statusCode: result.statusCode,
     body: JSON.stringify(
       {
         input: event,
