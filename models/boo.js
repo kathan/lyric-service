@@ -1,5 +1,5 @@
-module.exports = async event => {
-    get: (request, response) => {
+module.exports = {
+    get: async (request, response) => {
         console.log('get fired...')
     }
 }
