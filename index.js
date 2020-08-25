@@ -1,6 +1,9 @@
 'use strict';
+const dispatch = require('lib/dispatch.js')
 
 module.exports.handler = async event => {
+  const model = event.
+  dispatch
   return {
     statusCode: 200,
     body: JSON.stringify(
@@ -12,7 +15,4 @@ module.exports.handler = async event => {
       2
     ),
   };
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
 };
