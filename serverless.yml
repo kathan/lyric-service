@@ -64,13 +64,13 @@ functions:
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
     events:
+      # - http:
+      #     path: api
+      #     method: 
+      #       - any
+      #       - options
       - http:
-          path: api
-          method: 
-            - any
-            - options
-      - http:
-          path: "api/{proxy}"
+          path: api/{proxy}
           method:
             - any
             - options
