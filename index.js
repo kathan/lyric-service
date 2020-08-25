@@ -6,7 +6,7 @@ const response = {
 }
 
 module.exports.handler = async request => {
-  const result = await dispatch(request, response)
+  await dispatch(request, response)
   return {
     statusCode: response.statusCode,
     body: response.body || JSON.stringify(
