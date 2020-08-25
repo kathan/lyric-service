@@ -2,8 +2,7 @@
 const dispatch = require('lib/dispatch.js')
 
 module.exports.handler = async event => {
-  const model = event.path
-  dispatch()
+  dispatch(event)
   return {
     statusCode: 200,
     body: JSON.stringify(
