@@ -9,12 +9,6 @@ module.exports.handler = async request => {
   await dispatch(request, response)
   return {
     statusCode: response.statusCode,
-    body: response.body || JSON.stringify(
-      {
-        input: request,
-      },
-      null,
-      2
-    ),
+    body: response.body,
   };
 };
