@@ -1,7 +1,6 @@
 module.exports = {
     get: async (request, response) => {
-        console.log('get fired...')
-        response.statusCode = 401
+        response.statusCode = 123
         response.body = JSON.stringify(
             {
                 input: request,
