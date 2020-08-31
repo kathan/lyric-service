@@ -1,6 +1,11 @@
 {
+    "name": "LyricService",
+    "version": "0.0.1",
+    "main": "index.js",
     "scripts": {
-        "test": "jest"
+        "test": "jest --testPathPattern=^\\(\\(?!\\.aws-sam\\).\\)*$",
+        "debug": "sam local invoke --template ./template.yaml -d 9229",
+        "start": "sam local invoke --template ./template.yaml"
     },
     "devDependencies": {
         "jest": "^26.4.2"

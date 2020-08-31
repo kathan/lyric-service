@@ -4,7 +4,7 @@ test('dispatch status code is 200', async () => {
     const request = {
         httpMethod: 'GET',
         pathParameters:{
-            proxy:"echo"
+            proxy: "echo"
         }
     }
     const response = {

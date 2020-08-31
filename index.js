@@ -1,6 +1,6 @@
 'use strict';
-const dispatch = require('lib/dispatch.js')
-const statusCodes = require('lib/statusCodes.js')
+const dispatch = require('./lib/dispatch.js')
+const statusCodes = require('./lib/statusCodes.js')
 const response = {
   "statusCode": 200,
   "isBase64Encoded": false
