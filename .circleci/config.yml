@@ -10,7 +10,8 @@ jobs:
             - attach_workspace:
                 at: /tmp/workspace
             - checkout
-            - run: npm ci
+            - run: 
+                command: npm ci
                 name: Install Dependencies
             - run:
                 name: Run Tests
