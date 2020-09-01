@@ -3,7 +3,11 @@ orbs:
     aws-cli: circleci/aws-cli@1.2.1
     serverless: circleci/serverless-framework@1.0.1
 jobs:
-    one:
+    test:
+        steps:
+            - run:
+                command: npm test
+    deploy:
         executor: serverless/default
         steps:
             - checkout
@@ -17,4 +21,4 @@ jobs:
 workflows:
     one_and_two:
         jobs:
-            - one
+            - deploy
