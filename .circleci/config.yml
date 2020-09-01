@@ -11,8 +11,9 @@ jobs:
                 at: /tmp/workspace
             - checkout
             - run: npm ci
+                name: Install Dependencies
             - run:
-                name: run tests
+                name: Run Tests
                 command: npm test
     deploy:
         executor: serverless/default
@@ -24,9 +25,13 @@ jobs:
                 org-name: circleci
             - run: 
                 command: sls deploy 
-                name: deploy
+                name: Deploy
 workflows:
     dev-release:
         jobs:
             - test
+                name: dev-test
             - deploy
+                name: dev-deploy
+                requires:
+                    - test
