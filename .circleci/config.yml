@@ -31,8 +31,7 @@ workflows:
     dev-release:
         jobs:
             - test
-                name: dev-test
-            - deploy
-                name: dev-deploy
+            - deploy:
+                name: Dev Deploy
                 requires:
                     - test
