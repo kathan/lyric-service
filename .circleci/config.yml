@@ -4,6 +4,8 @@ orbs:
     serverless: circleci/serverless-framework@1.0.1
 jobs:
     test:
+        docker:
+            - image: circleci/node:12
         steps:
             - run:
                 command: npm test
@@ -19,6 +21,9 @@ jobs:
                 command: sls deploy 
                 name: deploy
 workflows:
-    one_and_two:
+    dev-release:
         jobs:
+            - test
             - deploy
+                requires:
+                    - test
