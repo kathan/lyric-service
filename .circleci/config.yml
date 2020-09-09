@@ -31,7 +31,7 @@ jobs:
     migrations:
         docker:
             - image: Dockerfile.migrations
-        working_directory: ./database/migrations
+        working_directory: ./migrations
         steps:
             - checkout
             - setup_remote_docker

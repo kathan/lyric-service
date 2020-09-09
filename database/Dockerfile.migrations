@@ -1,4 +1,4 @@
-FROM flyway/flyway:6.0.2-alpine
+FROM boxfuse/flyway:5.2.4-alpine
 
 COPY ./database/migrations /flyway
 COPY ./database/migrations/flyway.conf /flyway/conf/flyway.conf
