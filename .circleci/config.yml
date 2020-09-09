@@ -30,7 +30,8 @@ jobs:
                 name: Deploy
     migrations:
         docker:
-            - image: boxfuse/flyway:5.2.4-alpine
+            image: boxfuse/flyway:5.2.4-alpine
+            entrypoint: ./migrations/entrypoint.sh
         working_directory: ./migrations
         steps:
             - checkout
@@ -39,7 +40,6 @@ jobs:
                 name: "Running migration"
                 command: |
                     mkdir ./migrations
-                    ./migrations/entrypoint.sh
 workflows:
     dev-release:
         jobs:
