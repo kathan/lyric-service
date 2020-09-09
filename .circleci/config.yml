@@ -30,7 +30,7 @@ jobs:
                 name: Deploy
     migrations:
         docker:
-            - image: boxfuse/flyway:5.2.4-alpine
+            image: boxfuse/flyway:5.2.4-alpine
             working_directory: /migrations
             steps:
                 - checkout
