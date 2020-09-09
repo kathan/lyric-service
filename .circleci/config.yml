@@ -38,6 +38,7 @@ jobs:
             - run:
                 name: "Running migration"
                 command: |
+                    mkdir ./migrations
                     ./migrations/entrypoint.sh
 workflows:
     dev-release:
