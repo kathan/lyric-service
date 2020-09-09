@@ -30,16 +30,16 @@ jobs:
                 name: Deploy
     migrations:
         docker:
-            image: boxfuse/flyway:5.2.4-alpine
-            working_directory: /migrations
-            steps:
-                - checkout
-                - setup_remote_docker
-                - run:
-                    name: "Running migrations"
-                    command: |
-                        mkdir /migrations
-                        /migrations/entrypoint.sh
+            - image: boxfuse/flyway:5.2.4-alpine
+        working_directory: /migrations
+        steps:
+            - checkout
+            - setup_remote_docker
+            - run:
+                name: "Running migrations"
+                command: |
+                    mkdir /migrations
+                    /migrations/entrypoint.sh
 workflows:
     dev-release:
         jobs:
