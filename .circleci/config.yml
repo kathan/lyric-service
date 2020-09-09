@@ -2,6 +2,7 @@ version: 2.1
 orbs:
     aws-cli: circleci/aws-cli@1.2.1
     serverless: circleci/serverless-framework@1.0.1
+    flyway: bwp-orbs/flyway@2.2.0
 jobs:
     test:
         docker:
@@ -27,6 +28,18 @@ jobs:
             - run: 
                 command: sls deploy 
                 name: Deploy
+    migrations:
+        docker:
+            - image: boxfuse/flyway:5.2.4-alpine
+            working_directory: /migrations
+            steps:
+                - checkout
+                - setup_remote_docker
+                - run:
+                    name: "Running migrations"
+                    command: |
+                        mkdir /migrations
+                        /migrations/entrypoint.sh
 workflows:
     dev-release:
         jobs:
@@ -35,3 +48,6 @@ workflows:
                 name: Dev Deploy
                 requires:
                     - test
+            - migrations:
+                name: Run Migrations
+                
