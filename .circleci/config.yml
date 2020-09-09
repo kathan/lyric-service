@@ -50,4 +50,6 @@ workflows:
                     - test
             - migrations:
                 name: Run Migrations
+                requires:
+                    - deploy
                 
