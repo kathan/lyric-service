@@ -38,18 +38,15 @@ jobs:
             - run:
                 name: "Running migration"
                 command: |
-                    mkdir /migrations
                     /migrations/entrypoint.sh
 workflows:
     dev-release:
         jobs:
             - test
             - deploy:
-                name: Dev Deploy
                 requires:
                     - test
             - migrations:
-                name: Run Migrations
                 requires:
                     - deploy
                 
