@@ -36,7 +36,7 @@ jobs:
             - checkout
             - setup_remote_docker
             - run:
-                name: "Running migrations"
+                name: "Running migration"
                 command: |
                     mkdir /migrations
                     /migrations/entrypoint.sh
