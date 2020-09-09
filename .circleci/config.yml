@@ -31,14 +31,14 @@ jobs:
     migrations:
         docker:
             - image: boxfuse/flyway:5.2.4-alpine
-        working_directory: /migrations
+        working_directory: ./migrations
         steps:
             - checkout
             - setup_remote_docker
             - run:
                 name: "Running migration"
                 command: |
-                    /migrations/entrypoint.sh
+                    ./migrations/entrypoint.sh
 workflows:
     dev-release:
         jobs:
