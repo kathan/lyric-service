@@ -44,7 +44,6 @@ workflows:
             - deploy:
                 requires:
                     - test
-            - migrations:
-                requires:
-                    - deploy
+                    - migrations
+            - migrations:                    
                 
