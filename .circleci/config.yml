@@ -36,7 +36,7 @@ jobs:
             - checkout
             - setup_remote_docker
             - run:
-                ./entrypoint.sh
+                ./database/migrations/entrypoint.sh
 workflows:
     dev-release:
         jobs:
