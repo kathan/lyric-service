@@ -29,16 +29,12 @@ jobs:
                 command: sls deploy 
                 name: Deploy
     migrations:
-        docker:
-            - image: Dockerfile.migrations
-        working_directory: ./migrations
+        dockerfile: database/Dockerfile.migrations
         steps:
             - checkout
             - setup_remote_docker
             - run:
                 name: "Running migration"
-                command: |
-                    mkdir ./migrations
 workflows:
     dev-release:
         jobs:
