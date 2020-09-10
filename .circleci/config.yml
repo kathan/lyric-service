@@ -29,9 +29,13 @@ jobs:
                 command: sls deploy 
                 name: Deploy
     migrations:
-        docker: 
+        docker:
             - image: boxfuse/flyway:5.2.4-alpine
-            entrypoint: ./database/migrations/entrypoint.sh
+              entrypoint: ./database/migrations/entrypoint.sh
+        working_directory: ./database/migrations
+        steps:
+            - checkout
+            - setup_remote_docker
 workflows:
     dev-release:
         jobs:
