@@ -36,7 +36,7 @@ jobs:
             - checkout
             - setup_remote_docker
             - run:
-                export FU=$FLYWAY_URL
+                export FU="$FLYWAY_URL"
                 ./database/migrations/entrypoint.sh
 workflows:
     dev-release:
