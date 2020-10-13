@@ -4,8 +4,9 @@
     "main": "index.js",
     "scripts": {
         "test": "jest --testPathPattern=^\\(\\(?!\\.aws-sam\\).\\)*$",
-        "debug": "sam local invoke --template ./template.yaml -d 9229",
-        "start": "sam local invoke --template ./template.yaml"
+        "debug": "sam local invoke -t ./template.yaml -d 9229",
+        "start": "sam local invoke -t ./template.yaml",
+        "run": "sam local start-api -t ./template.yaml"
     },
     "devDependencies": {
         "jest": "^26.4.2"

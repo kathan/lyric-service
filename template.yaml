@@ -1,0 +1,12 @@
+Resources:
+    LyricService:
+        Type: "AWS::Serverless::Function"
+        Properties:
+            Handler: index.handler
+            Runtime: nodejs12.x
+            Events:
+                Api:
+                    Type: Api
+                    Properties:
+                        Path: /{proxy+}
+                        Method: any
