@@ -4,11 +4,17 @@
     "main": "index.js",
     "scripts": {
         "test": "jest --testPathPattern=^\\(\\(?!\\.aws-sam\\).\\)*$",
-        "debug": "sam local invoke -t ./template.yaml -d 9229",
-        "start": "sam local invoke -t ./template.yaml",
-        "run": "sam local start-api -t ./template.yaml"
+        "debug": "sam local start-api -t ./template.yaml -d 5858",
+        "start": "sam local start-api -t ./template.yaml"
     },
     "devDependencies": {
         "jest": "^26.4.2"
+    },
+    "dependencies": {
+        "bufferutil": "^4.0.1",
+        "canvas": "^2.6.1",
+        "pg": "^8.4.1",
+        "sequelize": "^6.3.5",
+        "utf-8-validate": "^5.0.2"
     }
 }

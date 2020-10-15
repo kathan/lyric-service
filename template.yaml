@@ -8,5 +8,5 @@ Resources:
                 Api:
                     Type: Api
                     Properties:
-                        Path: /{proxy+}
+                        Path: /{proxy}
                         Method: any
