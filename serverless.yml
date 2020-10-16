@@ -65,7 +65,7 @@ functions:
 #    Check the event documentation for details
     events:
       - http:
-          path: api/{proxy}
+          path: api/{proxy+}
           method: any
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
