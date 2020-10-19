@@ -4,7 +4,7 @@
     "main": "index.js",
     "scripts": {
         "test": "jest --testPathPattern=^\\(\\(?!\\.aws-sam\\).\\)*$",
-        "debug": "sam local start-api -t ./template.yaml -d 5858",
+        "debug": "sam local start-api -t ./template.yaml -d 5858 --debug -l ./debug.log",
         "start": "sam local start-api -t ./template.yaml"
     },
     "devDependencies": {
