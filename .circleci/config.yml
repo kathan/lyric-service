@@ -21,6 +21,9 @@ jobs:
         executor: serverless/default
         steps:
             - checkout
+            - run: 
+                command: npm ci
+                name: Install Dependencies
             - aws-cli/setup
             - serverless/setup:
                 app-name: serverless-framework-orb
