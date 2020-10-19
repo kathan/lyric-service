@@ -1,4 +1,5 @@
 const dispatch = require('../lib/dispatch')
+const init = jest.mock('../lib/init.js')
 
 describe("songs tests", () => {
     const proxy = "song"
