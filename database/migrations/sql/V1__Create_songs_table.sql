@@ -1,4 +1,0 @@
-CREATE TABLE songs (
-  ID BIGSERIAL PRIMARY KEY,
-  NAME varchar(100) NOT NULL
-);

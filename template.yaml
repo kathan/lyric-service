@@ -4,9 +4,16 @@ Resources:
         Properties:
             Handler: index.handler
             Runtime: nodejs12.x
+            Environment:
+                Variables:
+                  DB_PORT:
+                  DB_USER:
+                  DB_HOST:
+                  DB_PASSWORD:
+                  DB_NAME:
             Events:
                 Api:
                     Type: Api
                     Properties:
-                        Path: /{proxy}
+                        Path: /{proxy+}
                         Method: any
