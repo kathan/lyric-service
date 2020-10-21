@@ -2,7 +2,12 @@ const init = require('../lib/init.js')
 
 module.exports = {
     get: async (request, response) => {
-        await init()
+        try {
+            await init()
+        }catch(error){
+            response.statusCode = 500
+            response.body = error;
+        }
         
         response.statusCode = 200
         response.body = JSON.stringify(
