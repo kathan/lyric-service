@@ -1,10 +1,8 @@
-const sequelize = require('./dbConnection.js')
 const { DataTypes, QueryInterface } = require('sequelize')
-const queryInterface = sequelize.getQueryInterface()
 const models = require('./models.js')
 const started = false
 
-module.exports = async function(){
+module.exports = async function(sequelize){
     if(!started){
         models.forEach(model => {
             sequelize.define(model.name, model.attributes, model.options)

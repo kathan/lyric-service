@@ -4,6 +4,7 @@ module.exports = async (request, response) => {
     const httpMethod = request.httpMethod
     const resourceArray = request.pathParameters.proxy.split('/')
     const handlerName = (resourceArray[0] ? resourceArray[0] : 'index.js')
+
     let handler
     try{
         handler = getHandler(handlerName)
@@ -29,11 +30,14 @@ module.exports = async (request, response) => {
     }
 }
 
-function getHandler(hanlderName){
-    const handlerPath = path.normalize(__dirname+'/../handlers/'+hanlderName+'.js')
+function getHandler(handlerName){
+    const handlerPath = path.normalize(__dirname+'/../handlers/'+handlerName+'.js')
+    // if(require.cache[handlerPath]){
+    //     console.log(`Removing old ${handlerName} from cache`)
+    //     delete require.cache[handlerPath]
+    // }
     console.log(`Looking for handler ${handlerPath}`)
     const handler = require(handlerPath)
-    delete require.cache[handlerPath]
     return handler
 }
 

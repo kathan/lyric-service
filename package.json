@@ -4,12 +4,13 @@
     "main": "index.js",
     "scripts": {
         "test": "jest --testPathPattern=^\\(\\(?!\\.aws-sam\\).\\)*$",
-        "build": "sam build",
-        "debug": "sam local start-api -d 5858 -t ./template.yaml --debug --force-image-build",
+        "build": "sam build -s ./src",
+        "debug": "sam local start-api -d 5858 -t ./.aws-sam/build/template.yaml --debug --force-image-build --docker-network bridge",
         "start": "sam local start-api -t ./template.yaml"
     },
     "devDependencies": {
-        "jest": "^26.4.2"
+        "jest": "^26.4.2",
+        "sequelize-mock": "^0.10.2"
     },
     "dependencies": {
         "bufferutil": "^4.0.1",
