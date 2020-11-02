@@ -28,10 +28,8 @@ jobs:
             - serverless/setup:
                 app-name: serverless-framework-orb
                 org-name: circleci
-            - run:
-                command: cd ./src 
             - run: 
-                command: pwd && sls deploy
+                command: cd ./src && sls deploy
                 name: Deploy
 workflows:
     dev-release:
