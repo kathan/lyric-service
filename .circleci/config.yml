@@ -19,7 +19,6 @@ jobs:
                 command: npm test
     deploy:
         executor: serverless/default
-        working_directory: ./src
         steps:
             - checkout
             - run: 
@@ -29,6 +28,8 @@ jobs:
             - serverless/setup:
                 app-name: serverless-framework-orb
                 org-name: circleci
+            - run:
+                command: cd src
             - run: 
                 command: sls deploy
                 name: Deploy
