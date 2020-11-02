@@ -19,6 +19,7 @@ jobs:
                 command: npm test
     deploy:
         executor: serverless/default
+        working_directory: ./src
         steps:
             - checkout
             - run: 
@@ -29,17 +30,8 @@ jobs:
                 app-name: serverless-framework-orb
                 org-name: circleci
             - run: 
-                command: sls deploy 
+                command: sls deploy
                 name: Deploy
-    migrations:
-        docker:
-            - image: boxfuse/flyway:5.2.4-alpine
-        working_directory: ./database/migrations
-        steps:
-            - checkout
-            - setup_remote_docker
-            - run:
-                ./database/migrations/entrypoint.sh
 workflows:
     dev-release:
         jobs:
