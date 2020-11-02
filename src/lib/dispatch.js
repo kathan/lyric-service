@@ -2,8 +2,11 @@ const path = require('path')
 
 module.exports = async (request, response) => {
     const httpMethod = request.httpMethod
-    const resourceArray = request.pathParameters.proxy.split('/')
-    const handlerName = (resourceArray[0] ? resourceArray[0] : 'index.js')
+    let resourceArray
+    if(request.pathParameters && request.pathParameters.proxy){
+        resourceArray = request.pathParameters.proxy.split('/')
+    }
+    const handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : 'index')
 
     let handler
     try{

@@ -2,7 +2,7 @@ Resources:
     LyricService:
         Type: "AWS::Serverless::Function"
         Properties:
-            Handler: index.handler
+            Handler: src/index.handler
             Runtime: nodejs12.x
             Environment:
                 Variables:
