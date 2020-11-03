@@ -19,11 +19,10 @@ jobs:
                 command: cd ./src && npm test
     deploy:
         executor: serverless/default
-        working_directory: ./src
         steps:
             - checkout
             - run: 
-                command: pwd && npm ci
+                command: cd ./src && npm ci
                 name: Install Dependencies
             - aws-cli/setup
             - serverless/setup:
