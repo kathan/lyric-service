@@ -16,7 +16,7 @@ jobs:
                 name: Install Dependencies
             - run:
                 name: Run Tests
-                command: npm test
+                command: cd ./src && npm test
     deploy:
         executor: serverless/default
         working_directory: ./src
