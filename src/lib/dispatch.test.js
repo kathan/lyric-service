@@ -1,7 +1,10 @@
 const dispatch = require('./dispatch')
 
 describe("dispatch tests", () => {
-    test('dispatch status code is 405', async () => {
+
+    getInitialResponse = () => ({statusCode: 0, body :{}})
+
+    test('POST on echo handler should return 405', async () => {
         const request = {
             path: "",
             httpMethod: 'POST',
@@ -9,15 +12,13 @@ describe("dispatch tests", () => {
                 proxy: "echo"
             }
         }
-        const response = {
-            statusCode: 0
-        }
+        const response = getInitialResponse()
 
         await dispatch(request, response)
         expect(response.statusCode).toBe(405);
     })
 
-    test('dispatch status code is 404', async () => {
+    test('GET on fakeHandler should return 404', async () => {
         const request = {
             path: "",
             httpMethod: 'GET',
@@ -25,31 +26,13 @@ describe("dispatch tests", () => {
                 proxy: "fakeHandler"
             }
         }
-        const response = {
-            statusCode: 0
-        }
+        const response = getInitialResponse()
 
         await dispatch(request, response)
         expect(response.statusCode).toBe(404);
     })
 
-    test('dispatch status code is 500', async () => {
-        const request = {
-            path: "",
-            httpMethod: 'PATCH',
-            pathParameters:{
-                proxy: "echo"
-            }
-        }
-        const response = {
-            statusCode: 0
-        }
-
-        await dispatch(request, response)
-        expect(response.statusCode).toBe(500);
-    })
-
-    test('method not allowed on handler', async () => {
+    test('CRAMP method on echo handler should return 405', async () => {
         const request = {
             path: "",
             httpMethod: 'CRAMP',
@@ -57,15 +40,13 @@ describe("dispatch tests", () => {
                 proxy: "echo"
             }
         }
-        const response = {
-            statusCode: 0
-        }
+        const response = getInitialResponse()
 
         await dispatch(request, response)
         expect(response.statusCode).toBe(405);
     })
 
-    test('handler is not an object', async () => {
+    test('GET on noObject handler should return 404', async () => {
         const request = {
             path: "",
             httpMethod: 'GET',
@@ -73,15 +54,23 @@ describe("dispatch tests", () => {
                 proxy: "noObject"
             }
         }
-        const response = {
-            statusCode: 0
-        }
+        const response = getInitialResponse()
 
         await dispatch(request, response)
         expect(response.statusCode).toBe(404);
     })
 
-    test('method name is not a string', async () => {
+    test('GET on undefined pathParameters.proxy object should go to default handler', async () => {
+        const request = {
+            httpMethod: 'GET',
+        }
+        const response = getInitialResponse()
+
+        await dispatch(request, response)
+        expect(response.statusCode).toBe(200);
+    })
+
+    test('Illegal method on echo should return 405', async () => {
         const request = {
             path: "",
             httpMethod: {},
@@ -89,9 +78,7 @@ describe("dispatch tests", () => {
                 proxy: "echo"
             }
         }
-        const response = {
-            statusCode: 0
-        }
+        const response = getInitialResponse()
 
         await dispatch(request, response)
         expect(response.statusCode).toBe(405);

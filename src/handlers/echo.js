@@ -1,4 +1,6 @@
-class Echo {
+const HandlerInterface = require("../lib/HandlerInterface")
+
+class Echo extends HandlerInterface{
     async get(request, response){
         response.statusCode = 200
         response.body = JSON.stringify(
@@ -8,10 +10,6 @@ class Echo {
             null,
             2
         )
-    }
-
-    async patch(){
-        throw "error"
     }
 }
 

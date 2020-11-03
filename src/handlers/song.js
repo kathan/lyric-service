@@ -1,5 +1,13 @@
-class Song{
+// const dbConnection = require('../lib/dbConnection')
+const HandlerInterface = require('../lib/HandlerInterface')
 
+class Song extends HandlerInterface{
+
+    constructor (model){
+        super()
+        this.model = model || require('../lib/dbConnection')().models[this.constructor.name]
+    }
+    
     async get (request, response){
         response.statusCode = 404
         const pathAry = (request.path ? request.path.split('/') : []).filter(Boolean)
@@ -27,15 +35,15 @@ class Song{
         response.statusCode = 405
     }
 
-    async post(request, response, Song){
+    async post(request, response){
         if(!request.body){
             response.statusCode = 400
             return
         }
         try{
-            let song = await Song.create(request.body)
+            let song = await this.model.create(request.body)
             await song.save()
-            song = await Song.findOne();
+            song = await this.model.findOne();
             response.body = song
             response.statusCode = 201
         }catch(error){

@@ -11,5 +11,7 @@ const config = {
     }
 }
 const sequelize = new Sequelize(db_url, config)
-init(sequelize)
-module.exports = sequelize
+module.exports = () =>{
+    init(sequelize)
+    return sequelize
+}

@@ -7,7 +7,7 @@ module.exports = async (request, response) => {
     if(request.pathParameters && request.pathParameters.proxy){
         resourceArray = request.pathParameters.proxy.split('/')
     }
-    const handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : 'index')
+    const handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : 'default')
 
     let handlerConstructor
     let handler

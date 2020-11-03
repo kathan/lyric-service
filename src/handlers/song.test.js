@@ -12,10 +12,9 @@ models.forEach(model => {
     }
     sequelize.models[model.name] = newModel
 })
-const Song = sequelize.models.Song
-const songConstructor = require('./song.js')
-const songHandler = new songConstructor()
-songHandler.model = Song
+const SongModel = sequelize.models.Song
+const SongHandler = require('./song.js')
+const songHandler = new SongHandler(SongModel)
 
 describe("song tests", () => {
     beforeEach(() => {
@@ -35,16 +34,16 @@ describe("song tests", () => {
         }
         const response = getInitialResponse()
 
-        const foundSong = await Song.create(
+        const foundSong = await SongModel.create(
             {name: "The Long And Winding Road"}
         )
-        jest.spyOn(Song, 'findAll')
-        jest.spyOn(Song, 'findOne').mockResolvedValueOnce(foundSong)
+        jest.spyOn(SongModel, 'findAll')
+        jest.spyOn(SongModel, 'findOne').mockResolvedValueOnce(foundSong)
 
         await songHandler.get(request, response)
         expect(response.statusCode).toBe(200)
-        expect(Song.findOne).toHaveBeenCalledTimes(1)
-        expect(Song.findAll).toHaveBeenCalledTimes(0)
+        expect(SongModel.findOne).toHaveBeenCalledTimes(1)
+        expect(SongModel.findAll).toHaveBeenCalledTimes(0)
         expect(response.body.song).toStrictEqual(foundSong)
     })
 
@@ -59,19 +58,19 @@ describe("song tests", () => {
         }
         const response = getInitialResponse()
 
-        const foundSongs = await Song.bulkCreate(
+        const foundSongs = await SongModel.bulkCreate(
             [
                 {name: "The Long And Winding Road"},
                 {name: "Get Back"}
             ]
         )
-        jest.spyOn(Song, 'findAll').mockResolvedValueOnce(foundSongs)
-        jest.spyOn(Song, 'findOne')
+        jest.spyOn(SongModel, 'findAll').mockResolvedValueOnce(foundSongs)
+        jest.spyOn(SongModel, 'findOne')
 
         await songHandler.get(request, response)
         expect(response.statusCode).toBe(200)
-        expect(Song.findOne).toHaveBeenCalledTimes(0)
-        expect(Song.findAll).toHaveBeenCalledTimes(1)
+        expect(SongModel.findOne).toHaveBeenCalledTimes(0)
+        expect(SongModel.findAll).toHaveBeenCalledTimes(1)
         expect(response.body.songs).toStrictEqual(foundSongs)
     })
 
@@ -94,7 +93,7 @@ describe("song tests", () => {
             name: "The Long And Winding Road"
         }
 
-        const song = await Song.create(body)
+        const song = await SongModel.create(body)
 
         const request = {
             httpMethod: 'POST',
@@ -105,15 +104,15 @@ describe("song tests", () => {
         }
         const response = getInitialResponse()
 
-        jest.spyOn(Song, 'create').mockResolvedValueOnce(song)
+        jest.spyOn(SongModel, 'create').mockResolvedValueOnce(song)
         jest.spyOn(song, 'save')
-        jest.spyOn(Song, 'findOne').mockResolvedValueOnce(song)
+        jest.spyOn(SongModel, 'findOne').mockResolvedValueOnce(song)
 
-        await songHandler.post(request, response, Song)
+        await songHandler.post(request, response)
 
         expect(song.save).toBeCalled()
-        expect(Song.findOne).toBeCalled()
-        expect(Song.create).toBeCalledWith(body);
+        expect(SongModel.findOne).toBeCalled()
+        expect(SongModel.create).toBeCalledWith(body);
         expect(response.statusCode).toBe(201);
         expect(song.name).toBe(response.body.name)
     })
@@ -124,7 +123,7 @@ describe("song tests", () => {
             name: "The Long And Winding Road"
         }
 
-        const song = await Song.create(body)
+        const song = await SongModel.create(body)
 
         const request = {
             httpMethod: 'POST',
@@ -135,15 +134,15 @@ describe("song tests", () => {
         }
         const response = getInitialResponse()
 
-        jest.spyOn(Song, 'create').mockRejectedValueOnce(new Error("Test Error"))
+        jest.spyOn(SongModel, 'create').mockRejectedValueOnce(new Error("Test Error"))
         jest.spyOn(song, 'save')
-        jest.spyOn(Song, 'findOne')
+        jest.spyOn(SongModel, 'findOne')
 
-        await songHandler.post(request, response, Song)
+        await songHandler.post(request, response, SongModel)
 
         expect(song.save).toBeCalledTimes(0)
-        expect(Song.findOne).toBeCalledTimes(0)
-        expect(Song.create).toBeCalledWith(body);
+        expect(SongModel.findOne).toBeCalledTimes(0)
+        expect(SongModel.create).toBeCalledWith(body);
         expect(response.statusCode).toBe(500);
     })
 
