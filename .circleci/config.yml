@@ -23,7 +23,7 @@ jobs:
         steps:
             - checkout
             - run: 
-                command: npm ci
+                command: pwd && npm ci
                 name: Install Dependencies
             - aws-cli/setup
             - serverless/setup:
