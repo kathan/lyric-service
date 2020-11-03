@@ -4,8 +4,9 @@ const statusCodes = require('./lib/statusCodes.js')
 
 module.exports.handler = async request => {
   const response = {
-    "statusCode": 200,
-    "isBase64Encoded": false,
+    statusCode: 200,
+    isBase64Encoded: false,
+    body: {}
   }
 
   try{

@@ -1,0 +1,7 @@
+{
+    "path": "/api/echo",
+    "pathParameters": {
+      "proxy": "echo"
+    },
+    "httpMethod": "GET"
+  }

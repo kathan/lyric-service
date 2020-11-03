@@ -4,9 +4,10 @@
     "main": "index.js",
     "scripts": {
         "test": "jest --testPathPattern=^\\(\\(?!\\.aws-sam\\).\\)*$",
-        "build": "sam build -s ./src",
-        "debug": "sam local start-api -d 5858 -t ./.aws-sam/build/template.yaml --debug --force-image-build --docker-network bridge",
-        "start": "sam local start-api -t ./template.yaml"
+        "invoke": "sam local invoke \"LyricService\" --debug-port=5858 -e ./event.json",
+        "build": "sam build",
+        "debug": "sam local start-api -d 5858 -t ./.aws-sam/build/template.yml --debug",
+        "start": "sam local start-api -t ./.aws-sam/build/template.yml"
     },
     "devDependencies": {
         "jest": "^26.4.2",

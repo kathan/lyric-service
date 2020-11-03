@@ -1,5 +1,5 @@
-module.exports = {
-    get: async (request, response) => {
+class Echo {
+    async get(request, response){
         response.statusCode = 200
         response.body = JSON.stringify(
             {
@@ -8,8 +8,11 @@ module.exports = {
             null,
             2
         )
-    },
-    patch: async () => {
+    }
+
+    async patch(){
         throw "error"
     }
 }
+
+module.exports = Echo

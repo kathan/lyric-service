@@ -3,6 +3,7 @@ const dispatch = require('./dispatch')
 describe("dispatch tests", () => {
     test('dispatch status code is 405', async () => {
         const request = {
+            path: "",
             httpMethod: 'POST',
             pathParameters:{
                 proxy: "echo"
@@ -18,6 +19,7 @@ describe("dispatch tests", () => {
 
     test('dispatch status code is 404', async () => {
         const request = {
+            path: "",
             httpMethod: 'GET',
             pathParameters:{
                 proxy: "fakeHandler"
@@ -33,6 +35,7 @@ describe("dispatch tests", () => {
 
     test('dispatch status code is 500', async () => {
         const request = {
+            path: "",
             httpMethod: 'PATCH',
             pathParameters:{
                 proxy: "echo"
@@ -48,6 +51,7 @@ describe("dispatch tests", () => {
 
     test('method not allowed on handler', async () => {
         const request = {
+            path: "",
             httpMethod: 'CRAMP',
             pathParameters:{
                 proxy: "echo"
@@ -63,6 +67,7 @@ describe("dispatch tests", () => {
 
     test('handler is not an object', async () => {
         const request = {
+            path: "",
             httpMethod: 'GET',
             pathParameters:{
                 proxy: "noObject"
@@ -73,14 +78,15 @@ describe("dispatch tests", () => {
         }
 
         await dispatch(request, response)
-        expect(response.statusCode).toBe(405);
+        expect(response.statusCode).toBe(404);
     })
 
-    test('method name is not an string', async () => {
+    test('method name is not a string', async () => {
         const request = {
+            path: "",
             httpMethod: {},
             pathParameters:{
-                proxy: "noObject"
+                proxy: "echo"
             }
         }
         const response = {

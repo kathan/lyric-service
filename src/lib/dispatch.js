@@ -1,4 +1,5 @@
 const path = require('path')
+const knownMethods = ['get', 'put', 'delete', 'patch', 'post']
 
 module.exports = async (request, response) => {
     const httpMethod = request.httpMethod
@@ -8,9 +9,11 @@ module.exports = async (request, response) => {
     }
     const handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : 'index')
 
+    let handlerConstructor
     let handler
     try{
-        handler = getHandler(handlerName)
+        handlerConstructor = getHandler(handlerName)
+        handler = new handlerConstructor()
     }catch(e){
         console.log(`Error in getHandler: ${e}`)
         response.statusCode = 404
@@ -18,7 +21,7 @@ module.exports = async (request, response) => {
     }
 
     try{
-        const method = getMethod(httpMethod, handler, handlerName)
+        const method = getMethod(httpMethod, handler)
         try{
             await method(request, response)
         }catch(e){
@@ -35,17 +38,12 @@ module.exports = async (request, response) => {
 
 function getHandler(handlerName){
     const handlerPath = path.normalize(__dirname+'/../handlers/'+handlerName+'.js')
-    // if(require.cache[handlerPath]){
-    //     console.log(`Removing old ${handlerName} from cache`)
-    //     delete require.cache[handlerPath]
-    // }
     console.log(`Looking for handler ${handlerPath}`)
     const handler = require(handlerPath)
     return handler
 }
 
-function getMethod(methodName, handler, handlerName){
-    const knownMethods = ['get', 'put', 'delete', 'patch', 'post']
+function getMethod(methodName, handler){
 
     if(typeof methodName !== 'string'){
         let msg = `Method name '${methodName}' is a '${typeof methodName}' type. String required.`
@@ -57,22 +55,22 @@ function getMethod(methodName, handler, handlerName){
         throw msg
     }
 
-    if(!isValidMethod(methodName.toLowerCase(), handler, handlerName)){
-        let msg = `Method name '${methodName}' is invalid on '${handlerName}'.`
+    if(!isValidMethod(methodName.toLowerCase(), handler)){
+        let msg = `Method name '${methodName}' is invalid on '${handler.constructor.name}'.`
         throw msg
     }
 
     return handler[methodName.toLowerCase()]
 }
 
-function isValidMethod(methodName, handler, handlerName){
+function isValidMethod(methodName, handler){
     if(typeof handler !== 'object'){
-        console.log(`Handler '${handlerName}' is a '${typeof handler}' type. Object required.`)
+        console.log(`Handler '${handler.constructor.name}' is a '${typeof handler}' type. Object required.`)
         return false
     }
 
-    if(!handler.hasOwnProperty(methodName) || !['function', 'AsyncFunction'].includes(typeof handler[methodName])){
-        console.log(`Method name '${methodName}' does not exist on handler '${handlerName}'.`)
+    if(!handler[methodName] || !['function', 'AsyncFunction'].includes(typeof handler[methodName])){
+        console.log(`Method name '${methodName}' does not exist on handler '${handler.constructor.name}'.`)
         return false
     }
     
