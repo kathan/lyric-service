@@ -5,6 +5,7 @@ orbs:
     flyway: bwp-orbs/flyway@2.2.0
 jobs:
     test:
+        working_directory: ./src
         docker:
             - image: circleci/node:12
         steps:
