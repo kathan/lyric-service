@@ -12,24 +12,24 @@ jobs:
                 at: /tmp/workspace
             - checkout
             - run: 
-                command: cd ./src && npm ci
+                command: npm ci
                 name: Install Dependencies
             - run:
                 name: Run Tests
-                command: cd ./src && npm test
+                command: npm test
     deploy:
         executor: serverless/default
         steps:
             - checkout
             - run: 
-                command: cd ./src && npm ci
+                command: npm ci
                 name: Install Dependencies
             - aws-cli/setup
             - serverless/setup:
                 app-name: serverless-framework-orb
                 org-name: circleci
             - run: 
-                command: cd ./src && sls deploy
+                command: sls deploy
                 name: Deploy
 workflows:
     dev-release:
