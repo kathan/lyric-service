@@ -1,11 +1,9 @@
-// const dbConnection = require('../lib/dbConnection')
 const HandlerInterface = require('../lib/HandlerInterface')
 
 class Song extends HandlerInterface{
-
-    constructor (model){
+    constructor(){
         super()
-        this.model = model || require('../lib/dbConnection')().models[this.constructor.name]
+        this.model = null
     }
     
     async get (request, response){
@@ -54,6 +52,10 @@ class Song extends HandlerInterface{
 
     async put(request, response){
         response.statusCode = 405
+    }
+
+    async before(request, response, options){
+        this.model = options.model ? options.model : require('../lib/dbConnection')().models[this.constructor.name]
     }
 }
 
