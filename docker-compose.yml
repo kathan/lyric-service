@@ -1,0 +1,15 @@
+---
+version: "2"
+services:
+  postgres_db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+networks:
+  default:
+    external:
+      name: lyricservice_default

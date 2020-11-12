@@ -3,15 +3,15 @@
     "version": "0.0.1",
     "main": "index.js",
     "scripts": {
-        "test": "jest --testPathPattern=^\\(\\(?!\\.aws-sam\\).\\)*$",
+        "watch": "jest --testPathIgnorePatterns=\\.aws-sam --detectOpenHandles --watch",
+        "test": "jest --testPathIgnorePatterns=\\.aws-sam --detectOpenHandles --forceExit",
         "invoke": "sam local invoke \"LyricService\" -d 5858 -e ./event.json",
         "build": "sam build",
         "debug": "sam local start-api --debug-port 5858 -t ./.aws-sam/build/template.yaml --debug --docker-network lyricservice_default",
         "start": "sam local start-api -t ./.aws-sam/build/template.yaml --docker-network lyricservice_default"
     },
     "devDependencies": {
-        "jest": "^26.6.3",
-        "sequelize-mock": "^0.10.2"
+        "jest": "^26.6.3"
     },
     "dependencies": {
         "bufferutil": "^4.0.2",

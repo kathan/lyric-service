@@ -1,168 +1,152 @@
-const models = require('../lib/models.js')
+jest.mock('../lib/dbConnection.js')
+const db = require('../lib/dbConnection.js')
 
 const proxy = "song"
 const urlPath = `/api/${proxy}`
 
 const SongModel = {
-    "findOne": jest.fn(),
-    "findAll": jest.fn()
+    "findByPk": jest.fn(),
+    "findAll": jest.fn(),
+    "create": jest.fn(),
 }
+
 const SongHandler = require('./song.js')
 const songHandler = new SongHandler(SongModel)
 songHandler.before({}, {}, {model: SongModel})
 
 describe("song tests", () => {
     beforeEach(() => {
-        jest.clearAllMocks();
-    });
+        jest.clearAllMocks()
+    })
 
-    getInitialResponse = () => ({statusCode: 0, body :{}})
-
-    it('should GET 1 song with status code of 200', async () => {
-
-        const request = {
-            path: `${urlPath}/1`,
-            httpMethod: 'GET',
+    getInitialRequest = (method) => {
+        return {
+            httpMethod: method,
             pathParameters:{
                 proxy: proxy
             }
         }
+    }
+    getInitialResponse = () => ({statusCode: 0, body :{}})
+
+    it('Should call close on songHandler.model when `after` is called on songHandler', async () =>{
+        jest.spyOn(db, 'close')
+
+        songHandler.after()
+
+        expect(db.close).toHaveBeenCalledTimes(1)
+    })
+
+    it('should GET 1 song with status code of 200', async () => {
+        const request = getInitialRequest('GET')
+        request.path = `${urlPath}/1`
         const response = getInitialResponse()
 
         const foundSong = {
             name: "The Long And Winding Road"
         }
 
-        jest.spyOn(SongModel, 'findOne').mockResolvedValueOnce(foundSong)
+        jest.spyOn(SongModel, 'findByPk').mockResolvedValueOnce(foundSong)
         jest.spyOn(SongModel, 'findAll')
 
         await songHandler.get(request, response)
         expect(response.statusCode).toBe(200)
-        expect(SongModel.findOne).toHaveBeenCalledTimes(1)
+        expect(SongModel.findByPk).toHaveBeenCalledTimes(1)
         expect(SongModel.findAll).toHaveBeenCalledTimes(0)
         expect(response.body.song).toStrictEqual(foundSong)
     })
 
     it('should GET all songs with status code of 200', async () => {
-
-        const request = {
-            httpMethod: 'GET',
-            pathParameters:{
-                proxy: proxy
-            }
-        }
+        const request = getInitialRequest('GET')
         const response = getInitialResponse()
 
         const foundSongs = [
             {name: "The Long And Winding Road"},
             {name: "Get Back"}
-            ]
+        ]
         
         jest.spyOn(SongModel, 'findAll').mockResolvedValueOnce(foundSongs)
-        jest.spyOn(SongModel, 'findOne')
+        jest.spyOn(SongModel, 'findByPk')
 
         await songHandler.get(request, response)
         expect(response.statusCode).toBe(200)
-        expect(SongModel.findOne).toHaveBeenCalledTimes(0)
+        expect(SongModel.findByPk).toHaveBeenCalledTimes(0)
         expect(SongModel.findAll).toHaveBeenCalledTimes(1)
         expect(response.body.songs).toStrictEqual(foundSongs)
     })
 
-    // test('song POST status code is 400', async () => {
-    //     const request = {
-    //         httpMethod: 'POST',
-    //         pathParameters:{
-    //             proxy: proxy
-    //         }
-    //     }
-    //     const response = getInitialResponse()
+    it('should return 400 when POST to song', async () => {
+        const request = getInitialRequest('POST')
+        const response = getInitialResponse()
         
-    //     await songHandler.post(request, response)
-    //     expect(response.statusCode).toBe(400);
-    // })
+        await songHandler.post(request, response)
+        expect(response.statusCode).toBe(400);
+    })
 
-    // test('song POST status code is 201', async () => {
+    it('should return status code 201 when POST to song', async () => {
+        const request = getInitialRequest('POST')
+        const body = `{"name": "The Long And Winding Road"}`
+
+        const song = {
+            name: "The Long And Winding Road",
+            save: jest.fn()
+        }
+
+        request.body = body
         
-    //     const body = {
-    //         name: "The Long And Winding Road"
-    //     }
+        const response = getInitialResponse()
 
-    //     const song = await SongModel.create(body)
+        jest.spyOn(SongModel, 'create').mockResolvedValueOnce(song)
+        jest.spyOn(song, 'save')
 
-    //     const request = {
-    //         httpMethod: 'POST',
-    //         pathParameters:{
-    //             proxy: proxy
-    //         },
-    //         body: body
-    //     }
-    //     const response = getInitialResponse()
+        await songHandler.post(request, response)
+        await songHandler.after()
 
-    //     jest.spyOn(SongModel, 'create').mockResolvedValueOnce(song)
-    //     jest.spyOn(song, 'save')
-    //     jest.spyOn(SongModel, 'findOne').mockResolvedValueOnce(song)
+        expect(song.save).toBeCalled()
+        expect(SongModel.create).toBeCalledWith(JSON.parse(body));
+        expect(response.statusCode).toBe(201);
+        expect(song.name).toBe(response.body.name)
+    })
 
-    //     await songHandler.post(request, response)
+    it('Should return 500 when POST to song', async () => {
+        const request = getInitialRequest('POST')
+        const songName = "The Long And Winding Road"
+        const body = `{"name": "${songName}"}`
+        request.body = body
 
-    //     expect(song.save).toBeCalled()
-    //     expect(SongModel.findOne).toBeCalled()
-    //     expect(SongModel.create).toBeCalledWith(body);
-    //     expect(response.statusCode).toBe(201);
-    //     expect(song.name).toBe(response.body.name)
-    // })
-
-    // test('song POST status code is 500', async () => {
+        const song = {
+            name: songName,
+            save: jest.fn(),
+        }
         
-    //     const body = {
-    //         name: "The Long And Winding Road"
-    //     }
+        const response = getInitialResponse()
 
-    //     const song = await SongModel.create(body)
+        jest.spyOn(SongModel, 'create').mockRejectedValueOnce(new Error("Test Error"))
+        jest.spyOn(song, 'save')
+        jest.spyOn(SongModel, 'findByPk')
 
-    //     const request = {
-    //         httpMethod: 'POST',
-    //         pathParameters:{
-    //             proxy: proxy
-    //         },
-    //         body: body
-    //     }
-    //     const response = getInitialResponse()
+        await songHandler.post(request, response, SongModel)
+        await songHandler.after(null, null, {model: SongModel})
+        
+        expect(song.save).toBeCalledTimes(0)
+        expect(SongModel.findByPk).toBeCalledTimes(0)
+        expect(SongModel.create).toBeCalledWith(JSON.parse(body));
+        expect(response.statusCode).toBe(500);
+    })
 
-    //     jest.spyOn(SongModel, 'create').mockRejectedValueOnce(new Error("Test Error"))
-    //     jest.spyOn(song, 'save')
-    //     jest.spyOn(SongModel, 'findOne')
+    it('Returns status code 405 when PUT to song', async () => {
+        const request = getInitialRequest('PUT')
+        const response = getInitialResponse()
 
-    //     await songHandler.post(request, response, SongModel)
+        await songHandler.put(request, response)
+        expect(response.statusCode).toBe(405);
+    })
 
-    //     expect(song.save).toBeCalledTimes(0)
-    //     expect(SongModel.findOne).toBeCalledTimes(0)
-    //     expect(SongModel.create).toBeCalledWith(body);
-    //     expect(response.statusCode).toBe(500);
-    // })
+    it('Should return 405 status code when PATCH song', async () => {
+        const request = getInitialRequest('PATCH')
+        const response = getInitialResponse()
 
-    // test('song PUT status code is 405', async () => {
-    //     const request = {
-    //         httpMethod: 'PUT',
-    //         pathParameters:{
-    //             proxy: proxy
-    //         }
-    //     }
-    //     const response = getInitialResponse()
-
-    //     await songHandler.put(request, response)
-    //     expect(response.statusCode).toBe(405);
-    // })
-
-    // test('song PATCH status code is 405', async () => {
-    //     const request = {
-    //         httpMethod: 'PATCH',
-    //         pathParameters:{
-    //             proxy: proxy
-    //         }
-    //     }
-    //     const response = getInitialResponse()
-
-    //     await songHandler.patch(request, response)
-    //     expect(response.statusCode).toBe(405);
-    // })
+        await songHandler.patch(request, response)
+        expect(response.statusCode).toBe(405);
+    })
 })

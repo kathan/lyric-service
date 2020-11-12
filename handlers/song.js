@@ -1,9 +1,9 @@
 const HandlerInterface = require('../lib/HandlerInterface')
+const db = require('../lib/dbConnection.js')
 
 class Song extends HandlerInterface{
     constructor(){
         super()
-        this.model = null
     }
     
     async get (request, response){
@@ -12,7 +12,7 @@ class Song extends HandlerInterface{
 
         if(pathAry.length === 3){
             const id = pathAry[2]
-            const song = await this.model.findOne(id);
+            const song = await this.model.findByPk(id);
 
             if(song){
                 response.statusCode = 200
@@ -38,10 +38,12 @@ class Song extends HandlerInterface{
             response.statusCode = 400
             return
         }
+
+        const data = JSON.parse(request.body)
+
         try{
-            let song = await this.model.create(request.body)
+            let song = await this.model.create(data)
             await song.save()
-            song = await this.model.findOne();
             response.body = song
             response.statusCode = 201
         }catch(error){
@@ -55,7 +57,15 @@ class Song extends HandlerInterface{
     }
 
     async before(request, response, options){
-        this.model = options.model ? options.model : require('../lib/dbConnection')().models[this.constructor.name]
+        this.model = options.model ? options.model : db.models[this.constructor.name]
+    }
+
+    async after(request, response, options){
+        try{
+            db.close()
+        }catch(e){
+            console.log(`Error: in song.after db.close: ${e}`)
+        }
     }
 }
 

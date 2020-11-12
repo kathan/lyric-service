@@ -1,17 +1,25 @@
-const dispatch = require('../lib/dispatch')
+jest.mock('../lib/dbConnection.js')
+const Dispatcher = require('../lib/dispatcher')
+const dispatcher = new Dispatcher()
 
-test('dispatch status code is 200', async () => {
-    const request = {
-        httpMethod: 'GET',
-        pathParameters:{
-            proxy: "echo"
+describe("dispatch tests", () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
+    it('should return 200 status code', async () => {
+        const request = {
+            httpMethod: 'GET',
+            pathParameters:{
+                proxy: "echo"
+            }
         }
-    }
-    const response = {
-        statusCode: 0
-    }
+        const response = {
+            statusCode: 0
+        }
 
-    await dispatch(request, response)
-    expect(response.statusCode).toBe(200);
-    expect(JSON.parse(response.body).input).toStrictEqual(request)
+        await dispatcher.dispatch(request, response)
+        expect(response.statusCode).toBe(200);
+        expect(JSON.parse(response.body).input).toStrictEqual(request)
+    })
 })
