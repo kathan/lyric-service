@@ -20,6 +20,6 @@ describe("dispatch tests", () => {
 
         await dispatcher.dispatch(request, response)
         expect(response.statusCode).toBe(200);
-        expect(JSON.parse(response.body).input).toStrictEqual(request)
+        expect(response.body.input).toStrictEqual(request)
     })
 })
