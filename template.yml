@@ -2,6 +2,7 @@ Resources:
     LyricService:
         Type: "AWS::Serverless::Function"
         Properties:
+            Timeout: 10
             Handler: index.handler
             Runtime: nodejs12.x
             Environment:

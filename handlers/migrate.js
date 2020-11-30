@@ -1,18 +1,22 @@
-const HandlerInterface = require("../lib/HandlerInterface")
-const db = require('../lib/dbConnection.js')
-let current = false
+const HandlerInterface = require("../lib/HandlerInterface");
+const db = require('../lib/dbConnection');
 
 class Migrate extends HandlerInterface{
-    async post(request, response){
-        await db.sync({alter: true})
-        response.statusCode = 200
-        current = true
+    constructor(){
+        super();
     }
 
-    async get(request, response){
-        response.body.current = current
-        response.statusCode = 200
+    async post(request, response){
+        try{
+            await db.sync({alter: true});
+            response.statusCode = 200;
+        }catch(err){
+            const msg = `Error in migrate handler: ${err}`;
+            console.error(msg);
+            response.body = msg;
+            response.statusCode = 500;
+        }
     }
 }
 
-module.exports = Migrate
+module.exports = Migrate;

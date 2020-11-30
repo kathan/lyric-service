@@ -1,11 +1,11 @@
 const HandlerInterface = require("../lib/HandlerInterface");
-const db = require('../lib/dbConnection.js')
-const loadModels = require('../lib/loadModels')
+const db = require('../lib/dbConnection');
+const loadModels = require('../lib/loadModels');
 
 class Init extends HandlerInterface{
     async before(request, response){
-        await loadModels(db)
+        loadModels(db);
     }
 }
 
-module.exports = Init
+module.exports = Init;

@@ -1,28 +1,31 @@
 const HandlerInterface = require('../lib/HandlerInterface');
 let db;
 
-class Song extends HandlerInterface{
+class SetlistSong extends HandlerInterface{
     constructor(){
         super();
     }
 
-    getId(request){
+    getIds(request){
         const pathAry = (request.path ? request.path.split('/') : []).filter(Boolean);
-        if(pathAry.length === 3){
-            return pathAry[2];
+        if(pathAry.length === 4){
+            return {
+                song_id: pathAry[2],
+                setlist_id: pathAry[3]
+            }
         }
     }
 
-    async getById(id){
-        return await this.model.findByPk(id);
+    async getByIds(ids){
+        return await this.model.find({where: ids});
     }
 
     async get (request, response){
         response.statusCode = 404;
-        const id = this.getId(request);
+        const ids = this.getIds(request);
 
-        if(id){
-            const song = await this.getById(id);
+        if(ids){
+            const song = await this.getByIds(ids);
 
             if(song){
                 response.statusCode = 200;
@@ -97,4 +100,4 @@ class Song extends HandlerInterface{
     }
 }
 
-module.exports = Song;
+module.exports = SetlistSong;

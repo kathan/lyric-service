@@ -1,7 +1,7 @@
 const HandlerInterface = require('../lib/HandlerInterface');
 let db;
 
-class Song extends HandlerInterface{
+class Setlist extends HandlerInterface{
     constructor(){
         super();
     }
@@ -14,27 +14,43 @@ class Song extends HandlerInterface{
     }
 
     async getById(id){
-        return await this.model.findByPk(id);
+        return await this.model.findOne({
+            where:{
+                id: id
+            }, include: [
+                {
+                    model: this.models.Song,
+                    required: false
+                },
+            ]
+        });
     }
 
     async get (request, response){
         response.statusCode = 404;
+
         const id = this.getId(request);
-
         if(id){
-            const song = await this.getById(id);
+            const setlist = await this.getById(id);
 
-            if(song){
+            if(setlist){
                 response.statusCode = 200;
-                response.body.song = song;
+                response.body.setlist = setlist;
             }
             return;
         }
         
-        const songs = await this.model.findAll();
-        if(songs){
+        const setlists = await this.model.findAll({
+            include: [
+                {
+                    model: this.models.Song,
+                    required: false
+                },
+            ]
+        });
+        if(setlists){
             response.statusCode = 200;
-            response.body.songs = songs;
+            response.body.setlists = setlists;
         }
         return;
     }
@@ -44,6 +60,7 @@ class Song extends HandlerInterface{
     }
 
     async post(request, response){
+        
         if(!request.body){
             response.statusCode = 400;
             return;
@@ -52,9 +69,9 @@ class Song extends HandlerInterface{
         const data = JSON.parse(request.body);
 
         try{
-            let song = await this.model.create(data);
-            await song.save();
-            response.body = song;
+            let setlist = await this.model.create(data);
+            await setlist.save();
+            response.body = setlist;
             response.statusCode = 201;
         }catch(error){
             console.log(error);
@@ -66,11 +83,11 @@ class Song extends HandlerInterface{
         const data = JSON.parse(request.body);
         const id = this.getId(request);
         if(id){
-            const song = await this.getById(id);
-            if(song){
-                await song.update(data);
+            const setlist = await this.getById(id);
+            if(setlist){
+                await setlist.update(data);
                 response.statusCode = 200;
-                response.body.song = song;
+                response.body.setlist = setlist;
             }else{
                 response.statusCode = 404;
             }
@@ -81,8 +98,13 @@ class Song extends HandlerInterface{
 
     async before(request, response, options){
         db = require('../lib/dbConnection');
+        this.models = db.models;
+        console.log('this.models', this.models);
         if(db.models[this.constructor.name]){
             this.model = db.models[this.constructor.name];
+            this.model.belongsToMany(this.models.Song, { through: this.models.SetlistSong, foreignKey: 'setlistId'});
+            this.models.Song.belongsToMany(this.model, { through: this.models.SetlistSong, foreignKey: 'songId'});
+
         }else{
             throw Error(`Could not find model ${this.constructor.name}`);
         }
@@ -92,9 +114,9 @@ class Song extends HandlerInterface{
         try{
             await db.close();
         }catch(e){
-            console.log(`Error: in song.after db.close: ${e}`);
+            console.log(`Error: in setlist.after db.close: ${e}`);
         }
     }
 }
 
-module.exports = Song;
+module.exports = Setlist;

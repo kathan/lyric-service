@@ -67,7 +67,7 @@ functions:
       - http:
           path: api/{proxy+}
           method: any
-#      - websocket: $connect
+      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
 #      - sns: greeter-topic
