@@ -99,7 +99,6 @@ class Setlist extends HandlerInterface{
     async before(request, response, options){
         db = require('../lib/dbConnection');
         this.models = db.models;
-        console.log('this.models', this.models);
         if(db.models[this.constructor.name]){
             this.model = db.models[this.constructor.name];
             this.model.belongsToMany(this.models.Song, { through: this.models.SetlistSong, foreignKey: 'setlistId'});
@@ -112,9 +111,9 @@ class Setlist extends HandlerInterface{
 
     async after(request, response, options){
         try{
-            await db.close();
+            // await db.close();
         }catch(e){
-            console.log(`Error: in setlist.after db.close: ${e}`);
+            console.error(`Error: in setlist.after db.close: ${e}`);
         }
     }
 }
