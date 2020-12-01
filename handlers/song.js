@@ -81,6 +81,7 @@ class Song extends HandlerInterface{
 
     async before(request, response, options){
         db = require('../lib/dbConnection');
+        this.models = db.models;
         if(db.models[this.constructor.name]){
             this.model = db.models[this.constructor.name];
         }else{
@@ -90,9 +91,9 @@ class Song extends HandlerInterface{
 
     async after(request, response, options){
         try{
-            await db.close();
+            // await db.close();
         }catch(e){
-            console.log(`Error: in song.after db.close: ${e}`);
+            console.error(`Error: in song.after db.close: ${e}`);
         }
     }
 }
