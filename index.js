@@ -24,6 +24,9 @@ module.exports.handler = async request => {
     return {
       statusCode: statusCodes.includes(response.statusCode) ? response.statusCode : 500,
       body: JSON.stringify(response.body),
+      headers: {
+        "content-type": "application/json",
+      },
     };
   }catch(error){
     return {
