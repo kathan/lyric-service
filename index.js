@@ -8,6 +8,9 @@ module.exports.handler = async request => {
   const response = {
     statusCode: 200,
     isBase64Encoded: false,
+    headers: {
+      'Content-Type': "application/json",
+    },
     body: {}
   };
   
