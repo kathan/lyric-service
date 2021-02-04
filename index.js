@@ -33,6 +33,7 @@ module.exports.handler = async request => {
 function findHandlerName(request){
   let handlerName;
   if(request.pathParameters && request.pathParameters.proxy){
+    console.log('Found Path')
     const resourceArray = request.pathParameters.proxy.split('/');
     handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : 'default');
   }else{
@@ -46,14 +47,17 @@ function findHandlerName(request){
       }
     });
   }
-  console.log('handlerName', handlerName);
   return handlerName || 'default';
 }
 
 async function getHandlerNames(){
   const handlerFiles = fs.readdirSync('./handlers');
+  console.log('handlerFiles', handlerFiles);
+
   const handlerNames = handlerFiles.map(file => {
     return path.basename(file, path.extname(file));
   });
+  console.log('handlerNames', handlerNames);
+
   return handlerNames;
 }
