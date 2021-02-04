@@ -38,26 +38,27 @@ function findHandlerName(request){
     handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : "default");
   }else{
     const pathArray = request.path.split("/");
+    console.log('pathArray', pathArray)
     const handlerNames = getHandlerNames();
-    handlerName = pathArray.forEach(pathPart => {
-      console.log("pathPart", pathPart);
+    console.log('handlerNames', handlerNames);
 
+    handlerName = pathArray.find(pathPart => {
+      console.log('pathPart', pathPart);
       if(handlerNames.includes(pathPart)){
         return pathPart;
       }
     });
   }
+  console.log('handlerName 1', handlerName)
   return handlerName || "default";
 }
 
 function getHandlerNames(){
   const handlerFiles = fs.readdirSync(__dirname+'/handlers');
-  console.log('handlerFiles', handlerFiles);
 
-  const handlerNames = handlerFiles.map(file => {
-    return path.basename(file, path.extname(file));
-  });
-  console.log('handlerNames', handlerNames);
+  const handlerNames = handlerFiles.filter(file => {
+    return !file.startsWith('.') && !file.includes('.test.')
+  }).map(file => path.basename(file, path.extname(file)));
 
   return handlerNames;
 }
