@@ -110,11 +110,7 @@ class Setlist extends HandlerInterface{
     }
 
     async after(request, response, options){
-        try{
-            // await db.close();
-        }catch(e){
-            console.error(`Error: in setlist.after db.close: ${e}`);
-        }
+        
     }
 }
 

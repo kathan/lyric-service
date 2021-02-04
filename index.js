@@ -8,6 +8,8 @@ module.exports.handler = async request => {
     isBase64Encoded: false,
     body: {}
   };
+  
+  console.log('request', request);
 
   try{
     await dispatcher.dispatch(request, response);

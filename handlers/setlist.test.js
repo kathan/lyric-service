@@ -31,14 +31,6 @@ describe("setlist tests", () => {
     };
     const getInitialResponse = () => ({statusCode: 0, body :{}});
 
-    // it('Should call close on setlistHandler.model when `after` is called on setlistHandler', async () =>{
-    //     jest.spyOn(db, 'close');
-
-    //     setlistHandler.after();
-
-    //     expect(db.close).toHaveBeenCalledTimes(1);
-    // });
-
     it('should GET 1 setlist with status code of 200', async () => {
         const request = getInitialRequest('GET');
         request.path = `${urlPath}/1`;

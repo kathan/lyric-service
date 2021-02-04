@@ -31,14 +31,6 @@ describe("song tests", () => {
     };
     const getInitialResponse = () => ({statusCode: 0, body :{}});
 
-    // it('Should call close on songHandler.model when `after` is called on songHandler', async () =>{
-    //     jest.spyOn(db, 'close');
-
-    //     songHandler.after();
-
-    //     expect(db.close).toHaveBeenCalledTimes(1);
-    // });
-
     it('should GET 1 song with status code of 200', async () => {
         const request = getInitialRequest('GET');
         request.path = `${urlPath}/1`;
