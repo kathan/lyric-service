@@ -64,9 +64,15 @@ functions:
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
     events:
-      - http:
-          path: api/{proxy+}
-          method: any
+      - alb:
+        listenerArn: arn:aws:elasticloadbalancing:us-east-1:974864958892:loadbalancer/app/lyric-lab-load-balancer/80b2ac7617560173
+        priority: 1
+        conditions:
+          host: lyriclab.io
+          path: /api/*
+#      - http:
+#          path: api/{proxy+}
+#          method: any
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
@@ -89,12 +95,6 @@ functions:
 #      - cognitoUserPool:
 #          pool: MyUserPool
 #          trigger: PreSignUp
-#      - alb:
-#          listenerArn: arn:aws:elasticloadbalancing:us-east-1:XXXXXX:listener/app/my-load-balancer/50dc6c495c0c9188/
-#          priority: 1
-#          conditions:
-#            host: example.com
-#            path: /hello
 
 #    Define function environment variables here
 #    environment:
