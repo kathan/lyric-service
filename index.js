@@ -50,8 +50,8 @@ function findHandlerName(request){
   return handlerName || 'default';
 }
 
-async function getHandlerNames(){
-  const handlerFiles = fs.readdirSync('./handlers');
+function getHandlerNames(){
+  const handlerFiles = fs.readdirSync(__dirname+'/handlers');
   console.log('handlerFiles', handlerFiles);
 
   const handlerNames = handlerFiles.map(file => {
