@@ -8,17 +8,19 @@ describe("dispatch tests", () => {
     });
 
     it('should return 200 status code', async () => {
+        const httpMethod = 'GET';
+        const handlerName = "echo";
         const request = {
-            httpMethod: 'GET',
+            httpMethod: httpMethod,
             pathParameters:{
-                proxy: "echo"
+                proxy: handlerName
             }
         };
         const response = {
             statusCode: 0
         };
 
-        await dispatcher.dispatch(request, response);
+        await dispatcher.dispatch(handlerName, httpMethod, request, response);
         expect(response.statusCode).toBe(200);
         expect(response.body.input).toStrictEqual(request);
     });

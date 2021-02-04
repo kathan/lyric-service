@@ -1,4 +1,6 @@
 const Dispatcher = require('./lib/dispatcher.js');
+const fs = require('fs');
+const path = require('path');
 const dispatcher = new Dispatcher();
 const statusCodes = require('./lib/statusCodes.js');
 
@@ -12,7 +14,10 @@ module.exports.handler = async request => {
   console.log('request', request);
 
   try{
-    await dispatcher.dispatch(request, response);
+    const httpMethod = request.httpMethod;
+    const handlerName = findHandlerName(request);
+    console.log('handlerName', handlerName);
+    await dispatcher.dispatch(handlerName, httpMethod, request, response);
     return {
       statusCode: statusCodes.includes(response.statusCode) ? response.statusCode : 500,
       body: JSON.stringify(response.body),
@@ -24,3 +29,31 @@ module.exports.handler = async request => {
     };
   }
 };
+
+function findHandlerName(request){
+  let handlerName;
+  if(request.pathParameters && request.pathParameters.proxy){
+    const resourceArray = request.pathParameters.proxy.split('/');
+    handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : 'default');
+  }else{
+    const pathArray = path.split('/');
+    const handlerNames = getHandlerNames();
+    handlerName = pathArray.foreach(pathPart => {
+      console.log('pathPart', pathPart);
+
+      if(handlerNames.includes(pathPart)){
+        return pathPart;
+      }
+    });
+  }
+  console.log('handlerName', handlerName);
+  return handlerName || 'default';
+}
+
+async function getHandlerNames(){
+  const handlerFiles = fs.readdirSync('./handlers');
+  const handlerNames = handlerFiles.map(file => {
+    return path.basename(file, path.extname(file));
+  });
+  return handlerNames;
+}
