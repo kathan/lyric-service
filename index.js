@@ -33,21 +33,21 @@ module.exports.handler = async request => {
 function findHandlerName(request){
   let handlerName;
   if(request.pathParameters && request.pathParameters.proxy){
-    console.log('Found Path')
-    const resourceArray = request.pathParameters.proxy.split('/');
-    handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : 'default');
+    console.log("Found Path");
+    const resourceArray = request.pathParameters.proxy.split("/");
+    handlerName = (resourceArray && resourceArray[0] ? resourceArray[0] : "default");
   }else{
-    const pathArray = path.split('/');
+    const pathArray = request.path.split("/");
     const handlerNames = getHandlerNames();
-    handlerName = pathArray.foreach(pathPart => {
-      console.log('pathPart', pathPart);
+    handlerName = pathArray.forEach(pathPart => {
+      console.log("pathPart", pathPart);
 
       if(handlerNames.includes(pathPart)){
         return pathPart;
       }
     });
   }
-  return handlerName || 'default';
+  return handlerName || "default";
 }
 
 function getHandlerNames(){
