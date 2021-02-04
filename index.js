@@ -9,7 +9,7 @@ module.exports.handler = async request => {
     statusCode: 200,
     isBase64Encoded: false,
     headers: {
-      'Content-Type': "application/json",
+      "content-type": "application/json",
     },
     body: {}
   };
