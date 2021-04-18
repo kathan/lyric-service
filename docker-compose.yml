@@ -1,5 +1,5 @@
 ---
-version: "2"
+version: "3.3"
 services:
   postgres_db:
     image: postgres
@@ -9,7 +9,12 @@ services:
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
 
-networks:
-  default:
-    external:
-      name: lyricservice_default
+  migration:
+    image: node
+    depends_on: 
+      - postgres_db
+    volumes:
+      - ./migrations:/src/migrations
+      - ./lib:/src/lib
+      - ./node_modules:/src/node_modules
+    command: ["node", "/src/migrations/index.js"]
