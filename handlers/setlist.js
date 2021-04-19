@@ -82,6 +82,7 @@ class Setlist extends HandlerInterface{
     async put(request, response){
         const data = JSON.parse(request.body);
         const id = this.getId(request);
+        console.log("id", id);
         if(id){
             const setlist = await this.getById(id);
             if(setlist){
