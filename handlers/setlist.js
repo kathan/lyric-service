@@ -100,18 +100,39 @@ class Setlist extends HandlerInterface{
     async before(request, response, options){
         db = require('../lib/dbConnection');
         this.models = db.models;
-        if(db.models[this.constructor.name]){
-            this.model = db.models[this.constructor.name];
-            this.model.belongsToMany(this.models.Song, { through: this.models.SetlistSong, foreignKey: 'setlistId'});
-            this.models.Song.belongsToMany(this.model, { through: this.models.SetlistSong, foreignKey: 'songId'});
+        const songModel = this.models.Song;
+        if(this.getModel()){
+            this.getModel().belongsToMany(songModel, { 
+                through: this.models.SetlistSong, 
+                foreignKey: 'setlistId',
+            });
 
+            songModel.belongsToMany(this.getModel(), {
+                through: this.models.SetlistSong,
+                foreignKey: 'songId',
+                as: {
+                    singular: 'song',
+                    plural: 'songs'
+                }
+            });
         }else{
-            throw Error(`Could not find model ${this.constructor.name}`);
+            throw Error(`Could not find model ${this.getModelName()}`);
         }
     }
 
     async after(request, response, options){
         
+    }
+
+    getModel(){
+        if(!this.model){
+            this.model = this.models[this.getModelName()];
+        }
+        return this.model;
+    }
+
+    getModelName(){
+        return this.constructor.name;
     }
 }
 

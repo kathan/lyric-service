@@ -1,0 +1,15 @@
+{
+    "globals": {
+        "spyOn": false,
+        "it": false,
+        "console": false,
+        "describe": false,
+        "expect": false,
+        "beforeEach": false,
+        "jest": false
+    },
+    "eqeqeq": true,
+    "esversion": 8,
+    "strict": "implied",
+    "node": true
+}
