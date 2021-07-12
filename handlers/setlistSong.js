@@ -92,11 +92,7 @@ class SetlistSong extends HandlerInterface{
     }
 
     async after(request, response, options){
-        try{
-            await db.close();
-        }catch(e){
-            console.log(`Error: in song.after db.close: ${e}`);
-        }
+        
     }
 }
 
