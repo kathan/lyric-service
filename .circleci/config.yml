@@ -31,9 +31,6 @@ jobs:
             - run: 
                 command: sls deploy
                 name: Deploy
-            - run:
-                name: Run migrations
-                command: node migrations
 workflows:
     dev-release:
         jobs:
