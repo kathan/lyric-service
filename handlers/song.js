@@ -43,6 +43,18 @@ class Song extends HandlerInterface{
         response.statusCode = 405;
     }
 
+    async delete(request, response){
+        const id = this.getId(request);
+        try{
+            const song = await this.getById(id);
+            await song.destroy();
+            response.statusCode = 200;
+        }catch(error){
+            console.log(error);
+            response.statusCode = 500;
+        }
+    }
+
     async post(request, response){
         if(!request.body){
             response.statusCode = 400;
