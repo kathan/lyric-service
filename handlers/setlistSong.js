@@ -10,8 +10,8 @@ class SetlistSong extends HandlerInterface{
         const pathAry = (request.path ? request.path.split('/') : []).filter(Boolean);
         if(pathAry.length === 4){
             return {
-                song_id: pathAry[2],
-                setlist_id: pathAry[3]
+                setlist_id: pathAry[2],
+                song_id: pathAry[3],
             }
         }
     }
@@ -25,11 +25,11 @@ class SetlistSong extends HandlerInterface{
         const ids = this.getIds(request);
 
         if(ids){
-            const song = await this.getByIds(ids);
+            const setlistSong = await this.getByIds(ids);
 
-            if(song){
+            if(setlistSong){
                 response.statusCode = 200;
-                response.body.song = song;
+                response.body.setlistSongs = setlistSong;
             }
             return;
         }
@@ -37,7 +37,7 @@ class SetlistSong extends HandlerInterface{
         const songs = await this.model.findAll();
         if(songs){
             response.statusCode = 200;
-            response.body.songs = songs;
+            response.body.setlistSongs = songs;
         }
         return;
     }

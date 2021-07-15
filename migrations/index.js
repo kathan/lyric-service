@@ -1,9 +1,14 @@
 const db = require('../lib/dbConnection');
 const loadModels = require('../lib/loadModels');
+const schema = 'lyrics';
 
 const runMigrations = async function(){
     try{
-        await db.createSchema('lyrics');
+        const schemas = await db.showAllSchemas();
+        if(!schemas.includes(schema)){
+            console.log(`Creating schema ${schema}`)
+            await db.createSchema(schema);
+        }
         db.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
         loadModels(db);
         await db.sync({alter: true});
