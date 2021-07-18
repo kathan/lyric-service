@@ -1,43 +1,40 @@
 const HandlerInterface = require('../lib/HandlerInterface');
 let db;
 
-class SetlistSong extends HandlerInterface{
+class User extends HandlerInterface{
     constructor(){
         super();
     }
 
-    getIds(request){
+    getId(request){
         const pathAry = (request.path ? request.path.split('/') : []).filter(Boolean);
-        if(pathAry.length === 4){
-            return {
-                setlist_id: pathAry[2],
-                song_id: pathAry[3],
-            }
+        if(pathAry.length === 3){
+            return pathAry[2];
         }
     }
 
-    async getByIds(ids){
-        return await this.model.find({where: ids});
+    async getById(id){
+        return await this.model.findByPk(id);
     }
 
     async get (request, response){
         response.statusCode = 404;
-        const ids = this.getIds(request);
+        const id = this.getId(request);
 
-        if(ids){
-            const setlistSong = await this.getByIds(ids);
+        if(id){
+            const user = await this.getById(id);
 
-            if(setlistSong){
+            if(user){
                 response.statusCode = 200;
-                response.body.setlistSongs = setlistSong;
+                response.body.user = user;
             }
             return;
         }
         
-        const songs = await this.model.findAll();
-        if(songs){
+        const users = await this.model.findAll();
+        if(users){
             response.statusCode = 200;
-            response.body.setlistSongs = songs;
+            response.body.users = users;
         }
         return;
     }
@@ -46,32 +43,34 @@ class SetlistSong extends HandlerInterface{
         response.statusCode = 405;
     }
 
+    async delete(request, response){
+        const id = this.getId(request);
+        try{
+            const user = await this.getById(id);
+            await user.destroy();
+            response.statusCode = 200;
+        }catch(error){
+            console.log(error);
+            response.statusCode = 500;
+        }
+    }
+
     async post(request, response){
         if(!request.body){
             response.statusCode = 400;
             return;
         }
-        let data;
+
+        const data = JSON.parse(request.body);
+
         try{
-            data = JSON.parse(request.body);
+            let user = await this.model.create(data);
+            await user.save();
+            response.body = user;
+            response.statusCode = 201;
         }catch(error){
             console.log(error);
             response.statusCode = 500;
-        }
-
-        if(data){
-            try{
-                let song = await this.model.create(data);
-                await song.save();
-                response.body = song;
-                response.statusCode = 201;
-            }catch(error){
-                console.log(error);
-                response.statusCode = 400;
-            }
-        }else{
-            console.log(error);
-            response.statusCode = 400;
         }
     }
 
@@ -79,11 +78,11 @@ class SetlistSong extends HandlerInterface{
         const data = JSON.parse(request.body);
         const id = this.getId(request);
         if(id){
-            const song = await this.getById(id);
-            if(song){
-                await song.update(data);
+            const user = await this.getById(id);
+            if(user){
+                await user.update(data);
                 response.statusCode = 200;
-                response.body.song = song;
+                response.body.song = user;
             }else{
                 response.statusCode = 404;
             }
@@ -94,6 +93,7 @@ class SetlistSong extends HandlerInterface{
 
     async before(request, response, options){
         db = require('../lib/dbConnection');
+        this.models = db.models;
         if(db.models[this.constructor.name]){
             this.model = db.models[this.constructor.name];
         }else{
@@ -106,4 +106,4 @@ class SetlistSong extends HandlerInterface{
     }
 }
 
-module.exports = SetlistSong;
+module.exports = User;

@@ -61,10 +61,16 @@ class Setlist extends HandlerInterface{
 
     async delete(request, response){
         const id = this.getId(request);
+        console.log('id', id);
         try{
             const setlist = await this.getById(id);
-            await setlist.destroy();
-            response.statusCode = 200;
+            if(setlist){
+                await setlist.destroy();
+                response.statusCode = 200;
+                return;
+            }
+            console.log(`${id} not found in ${this.getModelName()}`);
+            response.statusCode = 404;
         }catch(error){
             console.log(error);
             response.statusCode = 500;

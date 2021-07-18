@@ -2,7 +2,6 @@ version: 2.1
 orbs:
     aws-cli: circleci/aws-cli@1.2.1
     serverless: circleci/serverless-framework@1.0.1
-    flyway: bwp-orbs/flyway@2.2.0
 jobs:
     test:
         docker:
@@ -31,6 +30,9 @@ jobs:
             - run: 
                 command: sls deploy
                 name: Deploy
+            - run:
+                command: curl -X POST htps://lyriclab.io/api/migrate
+                name: Run Migrations
 workflows:
     dev-release:
         jobs:

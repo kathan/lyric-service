@@ -1,7 +1,7 @@
 const HandlerInterface = require('../lib/HandlerInterface');
 let db;
 
-class SetlistSong extends HandlerInterface{
+class UserSetlist extends HandlerInterface{
     constructor(){
         super();
     }
@@ -10,8 +10,8 @@ class SetlistSong extends HandlerInterface{
         const pathAry = (request.path ? request.path.split('/') : []).filter(Boolean);
         if(pathAry.length === 4){
             return {
-                setlist_id: pathAry[2],
-                song_id: pathAry[3],
+                setlistId: pathAry[2],
+                userId: pathAry[3],
             }
         }
     }
@@ -25,19 +25,19 @@ class SetlistSong extends HandlerInterface{
         const ids = this.getIds(request);
 
         if(ids){
-            const setlistSong = await this.getByIds(ids);
+            const userSetlist = await this.getByIds(ids);
 
-            if(setlistSong){
+            if(userSetlist){
                 response.statusCode = 200;
-                response.body.setlistSongs = setlistSong;
+                response.body.userSetlist = userSetlist;
             }
             return;
         }
         
-        const songs = await this.model.findAll();
-        if(songs){
+        const userSetlists = await this.model.findAll();
+        if(userSetlists){
             response.statusCode = 200;
-            response.body.setlistSongs = songs;
+            response.body.userSetlists = userSetlists;
         }
         return;
     }
@@ -59,17 +59,12 @@ class SetlistSong extends HandlerInterface{
             response.statusCode = 500;
         }
 
-        if(data){
-            try{
-                let song = await this.model.create(data);
-                await song.save();
-                response.body = song;
-                response.statusCode = 201;
-            }catch(error){
-                console.log(error);
-                response.statusCode = 400;
-            }
-        }else{
+        try{
+            const userSetlist = await this.model.create(data);
+            await userSetlist.save();
+            response.body = userSetlist;
+            response.statusCode = 201;
+        }catch(error){
             console.log(error);
             response.statusCode = 400;
         }
@@ -79,11 +74,11 @@ class SetlistSong extends HandlerInterface{
         const data = JSON.parse(request.body);
         const id = this.getId(request);
         if(id){
-            const song = await this.getById(id);
-            if(song){
-                await song.update(data);
+            const userSetlist = await this.getById(id);
+            if(userSetlist){
+                await userSetlist.update(data);
                 response.statusCode = 200;
-                response.body.song = song;
+                response.body.userSetlist = userSetlist;
             }else{
                 response.statusCode = 404;
             }
@@ -106,4 +101,4 @@ class SetlistSong extends HandlerInterface{
     }
 }
 
-module.exports = SetlistSong;
+module.exports = UserSetlist;
