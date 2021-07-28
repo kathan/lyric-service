@@ -12,10 +12,12 @@ const runMigrations = async function(){
         db.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
         loadModels(db);
         await db.sync({alter: true});
-        console.error("Migrations complete");
+        console.info("Migrations complete");
+        console.trace();
     }catch(err){
         const msg = `Error in migration: ${err}`;
         console.error(msg);
+        console.trace();
     }
 }
 

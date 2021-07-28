@@ -13,6 +13,7 @@ class Migrate extends HandlerInterface{
         }catch(err){
             const msg = `Error in migrate handler: ${err}`;
             console.error(msg);
+            console.trace();
             response.body = msg;
             response.statusCode = 500;
         }
