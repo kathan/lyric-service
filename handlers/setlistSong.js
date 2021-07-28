@@ -10,14 +10,23 @@ class SetlistSong extends HandlerInterface{
         const pathAry = (request.path ? request.path.split('/') : []).filter(Boolean);
         if(pathAry.length === 4){
             return {
-                setlist_id: pathAry[2],
-                song_id: pathAry[3],
+                setlistId: pathAry[2],
+                songId: pathAry[3],
             }
         }
     }
 
     async getByIds(ids){
-        return await this.model.find({where: ids});
+        return await this.getModel().findOne({where: ids});
+    }
+
+    async getNextOrder(setlistId){
+        await this.getModel().max('songOrder',
+        {
+            where: {
+                setlistId
+            }
+        });
     }
 
     async get (request, response){
@@ -34,7 +43,7 @@ class SetlistSong extends HandlerInterface{
             return;
         }
         
-        const songs = await this.model.findAll();
+        const songs = await this.getModel().findAll();
         if(songs){
             response.statusCode = 200;
             response.body.setlistSongs = songs;
@@ -61,9 +70,9 @@ class SetlistSong extends HandlerInterface{
 
         if(data){
             try{
-                let song = await this.model.create(data);
-                await song.save();
-                response.body = song;
+                const setlistSong = await this.getModel().create(data);
+                await setlistSong.save();
+                response.body = setlistSong;
                 response.statusCode = 201;
             }catch(error){
                 console.log(error);
@@ -77,13 +86,14 @@ class SetlistSong extends HandlerInterface{
 
     async put(request, response){
         const data = JSON.parse(request.body);
-        const id = this.getId(request);
-        if(id){
-            const song = await this.getById(id);
-            if(song){
-                await song.update(data);
+        const ids = this.getIds(request);
+
+        if(ids){
+            const setlistSong = await this.getByIds(ids);
+            if(setlistSong){
+                await setlistSong.update(data);
                 response.statusCode = 200;
-                response.body.song = song;
+                response.body.setlistSong = setlistSong;
             }else{
                 response.statusCode = 404;
             }
@@ -94,6 +104,7 @@ class SetlistSong extends HandlerInterface{
 
     async before(request, response, options){
         db = require('../lib/dbConnection');
+        this.models = db.models;
         if(db.models[this.constructor.name]){
             this.model = db.models[this.constructor.name];
         }else{
@@ -103,6 +114,17 @@ class SetlistSong extends HandlerInterface{
 
     async after(request, response, options){
         
+    }
+
+    getModel(){
+        if(!this.model){
+            this.model = this.models[this.getModelName()];
+        }
+        return this.model;
+    }
+
+    getModelName(){
+        return this.constructor.name;
     }
 }
 

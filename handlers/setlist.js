@@ -118,19 +118,22 @@ class Setlist extends HandlerInterface{
         db = require('../lib/dbConnection');
         this.models = db.models;
         const songModel = this.models.Song;
-        if(this.getModel()){
-            this.getModel().belongsToMany(songModel, { 
-                through: this.models.SetlistSong, 
+        const SetlistSong = this.models.SetlistSong;
+        const thisModel = this.getModel();
+        if(thisModel){
+            thisModel.belongsToMany(songModel, { 
+                through: SetlistSong, 
                 foreignKey: 'setlistId',
             });
 
-            songModel.belongsToMany(this.getModel(), {
-                through: this.models.SetlistSong,
+            songModel.belongsToMany(thisModel, {
+                through: SetlistSong,
                 foreignKey: 'songId',
                 as: {
                     singular: 'song',
                     plural: 'songs'
-                }
+                },
+                order: [[SetlistSong, "songOrder", "ASC"]]
             });
         }else{
             throw Error(`Could not find model ${this.getModelName()}`);
