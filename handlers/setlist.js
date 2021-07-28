@@ -17,12 +17,14 @@ class Setlist extends HandlerInterface{
         return await this.model.findOne({
             where:{
                 id: id
-            }, include: [
+            }, 
+            include: [
                 {
                     model: this.models.Song,
                     required: false
                 },
-            ]
+            ],
+            order: this.order
         });
     }
 
@@ -45,8 +47,9 @@ class Setlist extends HandlerInterface{
                 {
                     model: this.models.Song,
                     required: false
-                },
-            ]
+                }
+            ],
+            order: this.order
         });
         if(setlists){
             response.statusCode = 200;
@@ -117,23 +120,19 @@ class Setlist extends HandlerInterface{
     async before(request, response, options){
         db = require('../lib/dbConnection');
         this.models = db.models;
-        const songModel = this.models.Song;
-        const SetlistSong = this.models.SetlistSong;
+        const SongModel = this.models.Song;
+        const SetlistSongModel = this.models.SetlistSong;
         const thisModel = this.getModel();
+        this.order = [[SongModel, SetlistSongModel, "songOrder", "ASC"]];
         if(thisModel){
-            thisModel.belongsToMany(songModel, { 
-                through: SetlistSong, 
+            thisModel.belongsToMany(SongModel, { 
+                through: SetlistSongModel, 
                 foreignKey: 'setlistId',
             });
 
-            songModel.belongsToMany(thisModel, {
-                through: SetlistSong,
+            SongModel.belongsToMany(thisModel, {
+                through: SetlistSongModel,
                 foreignKey: 'songId',
-                as: {
-                    singular: 'song',
-                    plural: 'songs'
-                },
-                order: [[SetlistSong, "songOrder", "ASC"]]
             });
         }else{
             throw Error(`Could not find model ${this.getModelName()}`);
