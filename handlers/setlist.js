@@ -18,12 +18,11 @@ class Setlist extends HandlerInterface{
             where:{
                 id: id
             }, 
-            include: [
-                {
-                    model: this.models.Song,
-                    required: false
-                },
-            ],
+            include: [{
+                model: this.models.Song,
+                // as: 'songs',
+                required: false,
+            }],
             order: this.order
         });
     }
@@ -124,19 +123,19 @@ class Setlist extends HandlerInterface{
         const SetlistSongModel = this.models.SetlistSong;
         const thisModel = this.getModel();
         this.order = [[SongModel, SetlistSongModel, "songOrder", "ASC"]];
-        if(thisModel){
-            thisModel.belongsToMany(SongModel, { 
-                through: SetlistSongModel, 
-                foreignKey: 'setlistId',
-            });
+        // if(thisModel.get){
+            // thisModel.belongsToMany(SongModel, { 
+            //     through: SetlistSongModel, 
+            //     foreignKey: 'setlistId',
+            // });
 
-            SongModel.belongsToMany(thisModel, {
-                through: SetlistSongModel,
-                foreignKey: 'songId',
-            });
-        }else{
-            throw Error(`Could not find model ${this.getModelName()}`);
-        }
+            // SongModel.belongsToMany(thisModel, {
+            //     through: SetlistSongModel,
+            //     foreignKey: 'songId',
+            // });
+        // }else{
+        //     throw Error(`Could not find model ${this.getModelName()}`);
+        // }
     }
 
     async after(request, response, options){
