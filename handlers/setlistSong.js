@@ -102,6 +102,23 @@ class SetlistSong extends HandlerInterface{
         response.statusCode = 400;
     }
 
+    async delete(request, response){
+        const ids = this.getIds(request);
+        try{
+            const setlistSong = await this.getByIds(ids);
+            if(setlistSong){
+                await setlistSong.destroy();
+                response.statusCode = 200;
+                return;
+            }
+            console.log(`${ids} not found in ${this.getModelName()}`);
+            response.statusCode = 404;
+        }catch(error){
+            console.log(error);
+            response.statusCode = 500;
+        }
+    }
+
     async before(request, response, options){
         db = require('../lib/dbConnection');
         this.models = db.models;
